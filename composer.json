@@ -3,19 +3,13 @@
     "description": "Solr API client using the JSON API.",
     "type": "library",
     "license": "proprietary",
-    "authors": [
-        {
-            "name": "Egyed Gábor",
-            "email": "egyed.gabor@ingatlan.com"
-        }
-    ],
     "require": {
         "ext-json": "*",
+        "symfony/http-client": "^4.3",
         "symfony/http-client-contracts": "^1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5",
-        "symfony/http-client": "^4.3"
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "psr-4": { "iCom\\SolrClient\\": "src/" }

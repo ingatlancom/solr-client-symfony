@@ -31,5 +31,15 @@ final class JsonQueryRequestTest extends TestCase
         $this->assertSame($request1->toJson(), $request2->toJson());
         $this->assertSame($request1->toArray(), $request2->toArray());
         $this->assertSame((string) $request1, (string) $request2);
+        $this->assertSame(json_encode($request1), json_encode($request2));
+    }
+
+    /** @test */
+    function it_throws_for_invalid_params(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageRegExp('#^Invalid keys "foo" found valid keys are ".+?".$#');
+
+        new JsonQueryRequest(['foo' => 'bar', 'query' => '*:*']);
     }
 }

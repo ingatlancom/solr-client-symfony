@@ -7,11 +7,23 @@ use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 final class JsonQueryRequest implements \JsonSerializable
 {
     // to keep key order consistent
-    private $body = ['query' => null, 'filter' => null, 'fields' => null, 'facet' => null, 'sort' => null];
+    private $body = [
+        'query' => null,
+        'filter' => null,
+        'fields' => null,
+        'facet' => null,
+        'sort' => null,
+        'offset' => null,
+        'limit' => null,
+        'params' => null,
+    ];
 
     public function __construct(array $body = [])
     {
-        // @todo validate keys
+        if ($invalid = array_diff_key($body, $this->body)) {
+            throw new \InvalidArgumentException(sprintf('Invalid keys "%s" found valid keys are "%s".', implode(', ', array_keys($invalid)), implode(', ', array_keys($this->body))));
+        }
+
         $this->body = array_replace($this->body, $body);
     }
 

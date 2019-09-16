@@ -62,7 +62,7 @@ final class CollapseFilter
 
     public function withNullPolicy(string $nullPolicy): self
     {
-        if (!\in_array($nullPolicy, $available = ['ignore', 'expand', 'collapse'])) {
+        if (!\in_array($nullPolicy, $available = ['ignore', 'expand', 'collapse'], true)) {
             throw new \InvalidArgumentException(sprintf('Available null policies: %s!', implode(',', $available)));
         }
 

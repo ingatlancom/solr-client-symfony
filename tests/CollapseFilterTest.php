@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 final class CollapseFilterTest extends TestCase
 {
     /** @test */
-    function it_throws_exception_on_invalid_null_policy()
+    function it_throws_exception_on_invalid_null_policy(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -16,7 +16,7 @@ final class CollapseFilterTest extends TestCase
     }
 
     /** @test */
-    function multiple_sorts_is_not_allowed()
+    function multiple_sorts_is_not_allowed(): void
     {
         $this->expectException(\RuntimeException::class);
 
