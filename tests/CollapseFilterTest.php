@@ -12,7 +12,7 @@ final class CollapseFilterTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        CollapseFilter::create('id')->withNullPolicy('policy');
+        CollapseFilter::create('id')->nullPolicy('policy');
     }
 
     /** @test */
@@ -20,7 +20,7 @@ final class CollapseFilterTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        CollapseFilter::create('id')->withMax('credit')->withMin('credit');
+        CollapseFilter::create('id')->max('credit')->min('credit');
     }
 
     /**
@@ -40,32 +40,32 @@ final class CollapseFilterTest extends TestCase
         ];
 
         yield 'min' => [
-            CollapseFilter::create('id')->withMin('credit'),
+            CollapseFilter::create('id')->min('credit'),
             '{!collapse field=id min=credit}'
         ];
 
         yield 'max' => [
-            CollapseFilter::create('id')->withMax('credit'),
+            CollapseFilter::create('id')->max('credit'),
             '{!collapse field=id max=credit}'
         ];
 
         yield 'sort' => [
-            CollapseFilter::create('id')->withSort(['credit desc', 'id desc']),
+            CollapseFilter::create('id')->sort(['credit desc', 'id desc']),
             "{!collapse field=id sort='credit desc,id desc'}"
         ];
 
         yield 'nullPolicy' => [
-            CollapseFilter::create('id')->withNullPolicy('ignore'),
+            CollapseFilter::create('id')->nullPolicy('ignore'),
             '{!collapse field=id nullPolicy=ignore}'
         ];
 
         yield 'hint' => [
-            CollapseFilter::create('id')->withHint(),
+            CollapseFilter::create('id')->hint(),
             '{!collapse field=id hint=top_fc}'
         ];
 
         yield 'size' => [
-            CollapseFilter::create('id')->withSize(50000),
+            CollapseFilter::create('id')->size(50000),
             '{!collapse field=id size=50000}'
         ];
     }

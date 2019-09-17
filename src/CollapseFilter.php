@@ -24,7 +24,7 @@ final class CollapseFilter
         return new self($field);
     }
 
-    public function withMin(string $expression): self
+    public function min(string $expression): self
     {
         if (null !== $this->params['sort'] || null !== $this->params['max']) {
             throw new \RuntimeException('Multiple sort is not allowed.');
@@ -36,7 +36,7 @@ final class CollapseFilter
         return $collapse;
     }
 
-    public function withMax(string $expression): self
+    public function max(string $expression): self
     {
         if (null !== $this->params['min'] || null !== $this->params['sort']) {
             throw new \RuntimeException('Multiple sort is not allowed.');
@@ -48,7 +48,7 @@ final class CollapseFilter
         return $collapse;
     }
 
-    public function withSort(array $sort): self
+    public function sort(array $sort): self
     {
         if (null !== $this->params['min'] || null !== $this->params['max']) {
             throw new \RuntimeException('Multiple sort is not allowed.');
@@ -60,7 +60,7 @@ final class CollapseFilter
         return $collapse;
     }
 
-    public function withNullPolicy(string $nullPolicy): self
+    public function nullPolicy(string $nullPolicy): self
     {
         if (!\in_array($nullPolicy, $available = ['ignore', 'expand', 'collapse'], true)) {
             throw new \InvalidArgumentException(sprintf('Available null policies: %s!', implode(',', $available)));
@@ -72,7 +72,7 @@ final class CollapseFilter
         return $collapse;
     }
 
-    public function withHint(): self
+    public function hint(): self
     {
         $collapse = clone $this;
         $collapse->params['hint'] = 'top_fc';
@@ -80,7 +80,7 @@ final class CollapseFilter
         return $collapse;
     }
 
-    public function withSize(int $size): self
+    public function size(int $size): self
     {
         $collapse = clone $this;
         $collapse->params['size'] = $size;
