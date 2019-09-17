@@ -10,6 +10,7 @@ interface Client
      * Runs a select query using the JSON Request API.
      *
      * Note that: Solr uses the Noggit JSON parser in its request API.
+     *
      * @see https://github.com/yonik/noggit
      *
      * Noggit is capable of more relaxed JSON parsing, and allows a number

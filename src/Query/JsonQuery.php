@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace iCom\SolrClient;
+namespace iCom\SolrClient\Query;
 
 use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 
-final class JsonQueryRequest implements \JsonSerializable
+final class JsonQuery implements \JsonSerializable
 {
     // to keep key order consistent
+    /**
+     * @var array<array-key, mixed>
+     */
     private $body = [
         'query' => null,
         'filter' => null,
@@ -25,6 +28,11 @@ final class JsonQueryRequest implements \JsonSerializable
         }
 
         $this->body = array_replace($this->body, $body);
+    }
+
+    public function __toString(): string
+    {
+        return $this->toJson();
     }
 
     public static function create(array $body = []): self
@@ -80,7 +88,6 @@ final class JsonQueryRequest implements \JsonSerializable
         return $q;
     }
 
-
     public function offset(int $offset): self
     {
         $q = clone $this;
@@ -110,11 +117,6 @@ final class JsonQueryRequest implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return $this->toArray();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toJson();
     }
 
     /**

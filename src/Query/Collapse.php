@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace iCom\SolrClient;
+namespace iCom\SolrClient\Query;
 
-final class CollapseFilter
+final class Collapse
 {
     private $params = [
         'field' => null,
@@ -17,6 +17,11 @@ final class CollapseFilter
     public function __construct(string $field)
     {
         $this->params['field'] = $field;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('{!collapse %s}', urldecode(http_build_query(array_filter($this->params), '', ' ')));
     }
 
     public static function create(string $field): self
@@ -86,10 +91,5 @@ final class CollapseFilter
         $collapse->params['size'] = $size;
 
         return $collapse;
-    }
-
-    public function __toString(): string
-    {
-        return sprintf('{!collapse %s}', urldecode(http_build_query(array_filter($this->params), '', ' ')));
     }
 }

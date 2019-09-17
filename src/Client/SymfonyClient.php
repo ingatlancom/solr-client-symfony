@@ -28,7 +28,7 @@ final class SymfonyClient implements Client
                     'base_uri' => rtrim($options['base_url'], '/').'/',
                     'headers' => [
                         'Content-Type' => 'application/json',
-                    ]
+                    ],
                 ],
             ],
             '.+'

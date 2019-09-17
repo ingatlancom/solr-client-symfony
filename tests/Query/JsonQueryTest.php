@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace iCom\SolrClient\Tests;
+namespace iCom\SolrClient\Tests\Query;
 
-use iCom\SolrClient\JsonQueryRequest;
+use iCom\SolrClient\Query\JsonQuery;
 use PHPUnit\Framework\TestCase;
 
-final class JsonQueryRequestTest extends TestCase
+final class JsonQueryTest extends TestCase
 {
     /** @test */
     function it_maintains_consistent_key_order(): void
     {
-        $request1 = new JsonQueryRequest();
+        $request1 = new JsonQuery();
         $request1
             ->query('*:*')
             ->filter(['field' => 'value'])
@@ -19,7 +19,7 @@ final class JsonQueryRequestTest extends TestCase
             ->offset(2)
         ;
 
-        $request2 = new JsonQueryRequest();
+        $request2 = new JsonQuery();
         $request2
             ->facet(['field' => 'value'])
             ->filter(['field' => 'value'])
@@ -40,6 +40,6 @@ final class JsonQueryRequestTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageRegExp('#^Invalid keys "foo" found valid keys are ".+?".$#');
 
-        new JsonQueryRequest(['foo' => 'bar', 'query' => '*:*']);
+        new JsonQuery(['foo' => 'bar', 'query' => '*:*']);
     }
 }

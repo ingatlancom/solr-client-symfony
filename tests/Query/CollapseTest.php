@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace iCom\SolrClient\Tests;
+namespace iCom\SolrClient\Tests\Query;
 
-use iCom\SolrClient\CollapseFilter;
+use iCom\SolrClient\Query\Collapse;
 use PHPUnit\Framework\TestCase;
 
-final class CollapseFilterTest extends TestCase
+final class CollapseTest extends TestCase
 {
     /** @test */
     function it_throws_exception_on_invalid_null_policy(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        CollapseFilter::create('id')->nullPolicy('policy');
+        Collapse::create('id')->nullPolicy('policy');
     }
 
     /** @test */
@@ -20,52 +20,52 @@ final class CollapseFilterTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        CollapseFilter::create('id')->max('credit')->min('credit');
+        Collapse::create('id')->max('credit')->min('credit');
     }
 
     /**
      * @test
      * @dataProvider provider
      */
-    function it_creates_filter_string(CollapseFilter $collapseFilter, string $expectedCollapse): void
+    function it_creates_filter_string(Collapse $collapse, string $expectedCollapse): void
     {
-        $this->assertSame($expectedCollapse, (string) $collapseFilter);
+        $this->assertSame($expectedCollapse, (string) $collapse);
     }
 
     public function provider(): iterable
     {
         yield 'field' => [
-            CollapseFilter::create('id'),
+            Collapse::create('id'),
             '{!collapse field=id}'
         ];
 
         yield 'min' => [
-            CollapseFilter::create('id')->min('credit'),
+            Collapse::create('id')->min('credit'),
             '{!collapse field=id min=credit}'
         ];
 
         yield 'max' => [
-            CollapseFilter::create('id')->max('credit'),
+            Collapse::create('id')->max('credit'),
             '{!collapse field=id max=credit}'
         ];
 
         yield 'sort' => [
-            CollapseFilter::create('id')->sort(['credit desc', 'id desc']),
+            Collapse::create('id')->sort(['credit desc', 'id desc']),
             "{!collapse field=id sort='credit desc,id desc'}"
         ];
 
         yield 'nullPolicy' => [
-            CollapseFilter::create('id')->nullPolicy('ignore'),
+            Collapse::create('id')->nullPolicy('ignore'),
             '{!collapse field=id nullPolicy=ignore}'
         ];
 
         yield 'hint' => [
-            CollapseFilter::create('id')->hint(),
+            Collapse::create('id')->hint(),
             '{!collapse field=id hint=top_fc}'
         ];
 
         yield 'size' => [
-            CollapseFilter::create('id')->size(50000),
+            Collapse::create('id')->size(50000),
             '{!collapse field=id size=50000}'
         ];
     }

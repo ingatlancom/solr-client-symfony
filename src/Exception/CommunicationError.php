@@ -6,6 +6,6 @@ class CommunicationError extends \RuntimeException implements Exception
 {
     public static function fromUpstreamException(\Throwable $e): self
     {
-        return  new self($e->getMessage(), $e->getCode(), $e);
+        return new self($e->getMessage(), $e->getCode(), $e);
     }
 }
