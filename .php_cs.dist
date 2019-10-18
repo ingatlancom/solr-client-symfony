@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        '@PHPUnit75Migration:risky' => true,
+        'array_indentation' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'braces' => ['allow_single_line_closure' => true],
+        'declare_strict_types' => true,
+        'heredoc_to_nowdoc' => false,
+        'native_function_invocation' => [
+            'include' => ['@compiler_optimized'],
+        ],
+        'no_unreachable_default_argument_value' => false,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'ordered_class_elements' => true,
+        'ordered_imports' => true,
+        'phpdoc_align' => ['align' => 'left'],
+        'phpdoc_annotation_without_dot' => false,
+        'php_unit_method_casing' => [
+            'case' => 'snake_case',
+        ],
+        'php_unit_set_up_tear_down_visibility' => true,
+        'php_unit_test_annotation' => [
+            'case' => 'snake',
+            'style' => 'annotation',
+        ],
+        'protected_to_private' => true,
+        'psr4' => true,
+        'static_lambda' => true,
+    ])
+    ->setRiskyAllowed(true)
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in([
+                __DIR__.'/src',
+                __DIR__.'/tests',
+            ])
+            ->exclude([
+                'Fixtures',
+            ])
+            ->append([__FILE__])
+    )
+;

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace iCom\SolrClient\Client;
 
@@ -49,8 +51,6 @@ final class SymfonyClient implements Client
 
         try {
             $response = $this->httpClient->request($method, $url, $options);
-            // block until headers arrive
-            $response->getStatusCode();
 
             return $response->toArray();
         } catch (ExceptionInterface $e) {

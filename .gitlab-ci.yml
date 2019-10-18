@@ -1,0 +1,52 @@
+cache:
+    paths:
+        - .composer-cache/
+        - build/bin/
+
+before_script:
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar config -g cache-dir "$(pwd)/.composer-cache"
+
+tests:7.1:
+    image: php:7.1-cli-alpine
+    script:
+        - php composer.phar update --ansi --prefer-lowest
+        - php vendor/bin/phpunit
+
+tests:7.3:
+    image: php:7.3-cli-alpine
+    script:
+        - php composer.phar update --ansi
+        - phpdbg -qrr vendor/bin/phpunit --coverage-text --colors=never
+        - "[ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.14.2/infection.phar -o build/bin/infection"
+        - phpdbg -qrr build/bin/infection --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
+
+integration-tests:
+    image: tmaier/docker-compose:latest
+    services:
+        - docker:19.03.1-dind
+    before_script: []
+    variables:
+        DOCKER_DRIVER: overlay2
+    script:
+        - cp $PWD/tests/Fixtures/sample.json $PWD/.docker/solr/data
+        - docker-compose up -d solr
+        - docker-compose exec -T solr wait-for-solr.sh
+        - docker-compose exec -T solr solr create -c sample -d /sample
+        - docker-compose exec -T solr post -c sample data/sample.json
+        - >
+            docker-compose run php7 /bin/sh -c "
+            composer update --ansi &&
+            php vendor/bin/phpunit --group=integration"
+
+code-analysis:
+    image: php:7.3-cli-alpine
+    script:
+        - php composer.phar validate -n --ansi --strict
+        - php composer.phar update --ansi
+        - "[ -e build/bin/phpstan ] || curl -Ls https://github.com/phpstan/phpstan/releases/download/0.11.16/phpstan.phar -o build/bin/phpstan"
+        - "[ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.15.3/php-cs-fixer.phar -o build/bin/php-cs-fixer"
+        - "[ -e build/bin/security-checker ] || curl -Ls https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker"
+        - php build/bin/phpstan analyse --no-progress --ansi
+        - php build/bin/php-cs-fixer fix --diff --ansi --dry-run
+        - php build/bin/security-checker security:check

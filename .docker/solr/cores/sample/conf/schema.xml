@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="sample" version="8.2">
+    <uniqueKey>id</uniqueKey>
+    <types>
+        <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" />
+        <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+        <fieldType name="int32" class="solr.IntPointField" docValues="true" indexed="false" stored="false" />
+    </types>
+    <fields>
+        <field name="id" type="string" docValues="true" indexed="true" stored="true" required="true" />
+        <field name="sample_bool" type="boolean" indexed="true" />
+        <field name="sample_int" type="int32" indexed="true" />
+    </fields>
+</schema>

@@ -1,0 +1,5 @@
+[
+    {"id": 1, "sample_bool":  true, "sample_int": 10},
+    {"id": 2, "sample_bool":  false, "sample_int": 10},
+    {"id": 3, "sample_bool":  true, "sample_int": 20}
+]

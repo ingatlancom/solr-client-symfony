@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <schemaFactory class="ClassicIndexSchemaFactory" />
+
+    <luceneMatchVersion>8.2.0</luceneMatchVersion>
+
+    <requestHandler name="/select" class="solr.SearchHandler">
+        <lst name="defaults">
+            <str name="echoParams">explicit</str>
+            <int name="rows">10</int>
+            <str name="df">text</str>
+        </lst>
+    </requestHandler>
+</config>

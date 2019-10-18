@@ -1,4 +1,8 @@
-/vendor/
-/phpunit.xml
+/.php_cs
+/.php_cs.cache
 /.phpunit.result.cache
 /composer.lock
+/infection.json
+/psalm.xml
+/phpunit.xml
+/vendor/

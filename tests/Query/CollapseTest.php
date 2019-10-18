@@ -1,72 +1,107 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace iCom\SolrClient\Tests\Query;
 
 use iCom\SolrClient\Query\Collapse;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \iCom\SolrClient\Query\Collapse
+ */
 final class CollapseTest extends TestCase
 {
     /** @test */
-    function it_throws_exception_on_invalid_null_policy(): void
+    public function it_throws_exception_on_invalid_null_policy(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         Collapse::create('id')->nullPolicy('policy');
     }
 
-    /** @test */
-    function multiple_sorts_is_not_allowed(): void
+    /**
+     * @test
+     * @dataProvider multipleSortProvider
+     */
+    public function it_throws_if_multiple_sort_is_configured(\Closure $multiSort): void
     {
         $this->expectException(\RuntimeException::class);
 
-        Collapse::create('id')->max('credit')->min('credit');
+        $multiSort();
     }
 
     /**
      * @test
      * @dataProvider provider
      */
-    function it_creates_filter_string(Collapse $collapse, string $expectedCollapse): void
+    public function it_creates_filter_string(\Closure $collapse, string $expectedCollapse): void
     {
-        $this->assertSame($expectedCollapse, (string) $collapse);
+        $this->assertSame($expectedCollapse, (string) $collapse());
+    }
+
+    public function multipleSortProvider(): iterable
+    {
+        yield 'min with sort' => [static function (): Collapse {
+            return Collapse::create('id')->min('field_name')->sort(['field_name desc']);
+        }];
+
+        yield 'min with max' => [static function (): Collapse {
+            return Collapse::create('id')->min('field_name')->max('field_name');
+        }];
+
+        yield 'max with min' => [static function (): Collapse {
+            return Collapse::create('id')->max('field_name')->min('field_name');
+        }];
+
+        yield 'max with sort' => [static function (): Collapse {
+            return Collapse::create('id')->max('field_name')->sort(['field_name desc']);
+        }];
+
+        yield 'sort with min' => [static function (): Collapse {
+            return Collapse::create('id')->sort(['field_name desc'])->min('field_name');
+        }];
+
+        yield 'sort with max' => [static function (): Collapse {
+            return Collapse::create('id')->sort(['field_name desc'])->max('field_name');
+        }];
     }
 
     public function provider(): iterable
     {
         yield 'field' => [
-            Collapse::create('id'),
-            '{!collapse field=id}'
+            static function (): Collapse { return Collapse::create('id'); },
+            '{!collapse field=id}',
         ];
 
         yield 'min' => [
-            Collapse::create('id')->min('credit'),
-            '{!collapse field=id min=credit}'
+            static function (): Collapse { return Collapse::create('id')->min('field_name'); },
+            '{!collapse field=id min=field_name}',
         ];
 
         yield 'max' => [
-            Collapse::create('id')->max('credit'),
-            '{!collapse field=id max=credit}'
+            static function (): Collapse { return Collapse::create('id')->max('field_name'); },
+            '{!collapse field=id max=field_name}',
         ];
 
         yield 'sort' => [
-            Collapse::create('id')->sort(['credit desc', 'id desc']),
-            "{!collapse field=id sort='credit desc,id desc'}"
+            static function (): Collapse { return Collapse::create('id')->sort(['field_name desc', 'id desc']); },
+            "{!collapse field=id sort='field_name desc,id desc'}",
         ];
 
         yield 'nullPolicy' => [
-            Collapse::create('id')->nullPolicy('ignore'),
-            '{!collapse field=id nullPolicy=ignore}'
+            static function (): Collapse { return Collapse::create('id')->nullPolicy('ignore'); },
+            '{!collapse field=id nullPolicy=ignore}',
         ];
 
         yield 'hint' => [
-            Collapse::create('id')->hint(),
-            '{!collapse field=id hint=top_fc}'
+            static function (): Collapse { return Collapse::create('id')->hint(); },
+            '{!collapse field=id hint=top_fc}',
         ];
 
         yield 'size' => [
-            Collapse::create('id')->size(50000),
-            '{!collapse field=id size=50000}'
+            static function (): Collapse { return Collapse::create('id')->size(50000); },
+            '{!collapse field=id size=50000}',
         ];
     }
 }

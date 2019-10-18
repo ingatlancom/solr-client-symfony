@@ -1,0 +1,9 @@
+parameters:
+    level: 7
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        -
+            message: '#Method iCom\\SolrClient\\Query\\JsonQuery::jsonEncode\(\) should return string but returns string\|false\.#'
+            path: src/Query/JsonQuery

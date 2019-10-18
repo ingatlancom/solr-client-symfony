@@ -18,6 +18,33 @@
     "autoload-dev": {
         "psr-4": { "iCom\\SolrClient\\Tests\\": "tests/" }
     },
+    "scripts": {
+        "test-lower": [
+            "composer update --ansi --prefer-lowest",
+            "vendor/bin/phpunit --colors=always"
+        ],
+        "test-upper": [
+            "composer update --ansi",
+            "phpdbg -qrr vendor/bin/phpunit --coverage-html=build/coverage-html --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text --log-junit=build/phpunit.junit.xml",
+            "[ -e build/bin/infection ] || curl -L https://github.com/infection/infection/releases/download/0.14.2/infection.phar -o build/bin/infection",
+            "PHP_BINARY=phpdbg phpdbg -qrr build/bin/infection --coverage=build --min-msi=84 --min-covered-msi=86 --ansi --show-mutations --log-verbosity=all || true"
+        ],
+        "tests": ["@test-lower", "@test-upper"],
+        "sa": [
+            "[ -e build/bin/phpstan ] || curl -L https://github.com/phpstan/phpstan/releases/download/0.11.16/phpstan.phar -o build/bin/phpstan",
+            "[ -e build/bin/psalm ] || curl -L https://github.com/vimeo/psalm/releases/download/3.5.1/psalm.phar -o build/bin/psalm",
+            "php build/bin/phpstan analyse src tests -l 7 --no-progress --ansi || php build/bin/psalm || true"
+        ],
+        "cs": [
+            "[ -e build/bin/php-cs-fixer ] || curl -L https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.15.3/php-cs-fixer.phar -o build/bin/php-cs-fixer",
+            "php build/bin/php-cs-fixer fix --diff --ansi --dry-run || true"
+        ],
+        "sc": [
+            "[ -e build/bin/security-checker ] || curl -L https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker",
+            "php build/bin/security-checker security:check"
+        ],
+        "all": ["@tests", "@sa", "@cs", "@sc"]
+    },
     "config": {
         "platform": {
             "php": "7.1.3"

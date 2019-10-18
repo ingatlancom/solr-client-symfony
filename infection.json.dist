@@ -1,0 +1,21 @@
+{
+    "timeout": 10,
+    "source": {
+        "directories": [
+            "src"
+        ],
+         "excludes": [
+             "Repository/"
+        ]
+    },
+    "logs": {
+        "text": "build/infection.log"
+    },
+    "mutators": {
+        "@default": {
+            "ignore": [
+                "iCom\\SolrClient\\Query\\JsonQuery::jsonEncode"
+            ]
+        }
+    }
+}

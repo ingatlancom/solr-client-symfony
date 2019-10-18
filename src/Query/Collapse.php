@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace iCom\SolrClient\Query;
 
@@ -21,7 +23,7 @@ final class Collapse
 
     public function __toString(): string
     {
-        return sprintf('{!collapse %s}', urldecode(http_build_query(array_filter($this->params), '', ' ')));
+        return sprintf('{!collapse %s}', urldecode(http_build_query($this->params, '', ' ')));
     }
 
     public static function create(string $field): self
@@ -31,9 +33,7 @@ final class Collapse
 
     public function min(string $expression): self
     {
-        if (null !== $this->params['sort'] || null !== $this->params['max']) {
-            throw new \RuntimeException('Multiple sort is not allowed.');
-        }
+        $this->assertSingleSort();
 
         $collapse = clone $this;
         $collapse->params['min'] = $expression;
@@ -43,9 +43,7 @@ final class Collapse
 
     public function max(string $expression): self
     {
-        if (null !== $this->params['min'] || null !== $this->params['sort']) {
-            throw new \RuntimeException('Multiple sort is not allowed.');
-        }
+        $this->assertSingleSort();
 
         $collapse = clone $this;
         $collapse->params['max'] = $expression;
@@ -55,9 +53,7 @@ final class Collapse
 
     public function sort(array $sort): self
     {
-        if (null !== $this->params['min'] || null !== $this->params['max']) {
-            throw new \RuntimeException('Multiple sort is not allowed.');
-        }
+        $this->assertSingleSort();
 
         $collapse = clone $this;
         $collapse->params['sort'] = sprintf("'%s'", implode(',', $sort));
@@ -91,5 +87,12 @@ final class Collapse
         $collapse->params['size'] = $size;
 
         return $collapse;
+    }
+
+    private function assertSingleSort(): void
+    {
+        if (null !== $this->params['min'] || null !== $this->params['max'] || null !== $this->params['sort']) {
+            throw new \RuntimeException('Multiple sort is not allowed.');
+        }
     }
 }

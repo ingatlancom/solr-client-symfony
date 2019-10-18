@@ -1,12 +1,14 @@
 # Solr Client
 
-Egyszerű [Solr][solr] kliens.
+[![pipeline status][0]][1] [![coverage report][2]][3]
 
-## Telepítés
+Simple [Solr][4] client.
+
+## Install
 
     $ composer require icom/solr-client
 
-## Használat
+## Usage
 
     <?php declare(strict_types=1);
     
@@ -24,4 +26,8 @@ Egyszerű [Solr][solr] kliens.
         // handle errors
     }
 
-[solr]: https://lucene.apache.org/solr/
+[0]: https://gitlab.com/1ed/solr-client/badges/master/pipeline.svg
+[1]: https://gitlab.com/1ed/solr-client/pipelines
+[2]: https://gitlab.com/1ed/solr-client/badges/master/coverage.svg
+[3]: https://gitlab.com/1ed/solr-client/commits/master
+[4]: https://lucene.apache.org/solr/
