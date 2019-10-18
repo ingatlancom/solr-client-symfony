@@ -72,7 +72,9 @@ final class SymfonyClientTest extends TestCase
      */
     public function it_can_query_solr(\Closure $query, array $expected)
     {
-        $response = SolrClient::create(['base_url' => 'http://solr:8983/solr/sample'])->select($query()->toJson());
+        $url = sprintf('http://%s:%s/solr/sample', getenv('SOLR_HOST') ?: 'solr', getenv('SOLR_PORT') ?: 8983);
+
+        $response = SolrClient::create(['base_url' => $url])->select($query()->toJson());
 
         $this->assertSame($expected, $response['response']['docs']);
     }

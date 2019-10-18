@@ -3,18 +3,22 @@ cache:
         - .composer-cache/
         - build/bin/
 
+variables:
+    PHP_IMAGE_LOWER: php:7.1-cli-alpine
+    PHP_IMAGE_UPPER: php:7.3-cli-alpine
+
 before_script:
     - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar config -g cache-dir "$(pwd)/.composer-cache"
+    - php composer.phar config -g cache-dir $PWD/.composer-cache
 
-tests:7.1:
-    image: php:7.1-cli-alpine
+tests:php-lower:
+    image: $PHP_IMAGE_LOWER
     script:
         - php composer.phar update --ansi --prefer-lowest
         - php vendor/bin/phpunit
 
-tests:7.3:
-    image: php:7.3-cli-alpine
+tests:php-upper:
+    image: $PHP_IMAGE_UPPER
     script:
         - php composer.phar update --ansi
         - phpdbg -qrr vendor/bin/phpunit --coverage-text --colors=never
@@ -22,25 +26,30 @@ tests:7.3:
         - phpdbg -qrr build/bin/infection --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
 
 integration-tests:
-    image: tmaier/docker-compose:latest
+    image: docker:19.03.3
     services:
-        - docker:19.03.1-dind
+        - docker:19.03.3-dind
     before_script: []
     variables:
         DOCKER_DRIVER: overlay2
+        SOLR_IMAGE: solr:8.2-slim
+        SOLR_HOST: localhost
+        SOLR_PORT: 8983
     script:
         - cp $PWD/tests/Fixtures/sample.json $PWD/.docker/solr/data
-        - docker-compose up -d solr
-        - docker-compose exec -T solr wait-for-solr.sh
-        - docker-compose exec -T solr solr create -c sample -d /sample
-        - docker-compose exec -T solr post -c sample data/sample.json
+        - docker run -d --name solr -p $SOLR_PORT:$SOLR_PORT -v $PWD/.docker/solr/data:/opt/solr/data -v $PWD/.docker/solr/cores/sample:/sample $SOLR_IMAGE
+        - docker exec solr wait-for-solr.sh
+        - docker exec solr solr create -V -c sample -d /sample
+        - docker exec solr post -c sample data/sample.json
         - >
-            docker-compose run php7 /bin/sh -c "
-            composer update --ansi &&
-            php vendor/bin/phpunit --group=integration"
+            docker run --network host -e SOLR_HOST=$SOLR_HOST -v $PWD:/app -v $PWD/.composer-cache:/.composer-cache -w /app $PHP_IMAGE_UPPER /bin/sh -c "
+            curl -sS https://getcomposer.org/installer | php &&
+            php composer.phar config -g cache-dir /.composer-cache &&
+            php composer.phar update --ansi &&
+            php vendor/bin/phpunit --group integration"
 
 code-analysis:
-    image: php:7.3-cli-alpine
+    image: $PHP_IMAGE_UPPER
     script:
         - php composer.phar validate -n --ansi --strict
         - php composer.phar update --ansi
