@@ -1,5 +1,5 @@
 {
-    "name": "icom/solr-client",
+    "name": "ingatlancom/solr-client-symfony",
     "description": "Solr API client using the JSON API.",
     "type": "library",
     "license": "proprietary",
