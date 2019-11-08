@@ -14,7 +14,7 @@
     "mutators": {
         "@default": {
             "ignore": [
-                "iCom\\SolrClient\\Query\\JsonQuery::jsonEncode"
+                "iCom\\SolrClient\\JsonHelper::jsonEncode"
             ]
         }
     }

@@ -51,6 +51,11 @@ final class SymfonyClient implements Client
         return $this->send('GET', 'select', $jsonBody);
     }
 
+    public function update(string $jsonBody): array
+    {
+        return $this->send('POST', 'update', $jsonBody);
+    }
+
     private function send(string $method, string $url, $body = null): array
     {
         $options = [];

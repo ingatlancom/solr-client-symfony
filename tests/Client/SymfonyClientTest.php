@@ -15,7 +15,11 @@ namespace iCom\SolrClient\Tests\Client;
 
 use iCom\SolrClient\Client\SymfonyClient;
 use iCom\SolrClient\Query\Collapse;
-use iCom\SolrClient\Query\JsonQuery;
+use iCom\SolrClient\Query\Command\Add;
+use iCom\SolrClient\Query\Command\Commit;
+use iCom\SolrClient\Query\Command\Delete;
+use iCom\SolrClient\Query\SelectQuery;
+use iCom\SolrClient\Query\UpdateQuery;
 use iCom\SolrClient\SolrClient;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -72,68 +76,102 @@ final class SymfonyClientTest extends TestCase
      */
     public function it_can_query_solr(\Closure $query, array $expected)
     {
-        $url = sprintf('http://%s:%s/solr/sample', getenv('SOLR_HOST') ?: 'solr', getenv('SOLR_PORT') ?: 8983);
-
-        $response = SolrClient::create(['base_url' => $url])->select($query()->toJson());
+        $response = SolrClient::create(['base_url' => getenv('SOLR_URL')])->select($query()->toJson());
 
         $this->assertSame($expected, $response['response']['docs']);
+    }
+
+    /**
+     * @test
+     * @group integration
+     */
+    public function it_can_update_solr()
+    {
+        $client = SolrClient::create(['base_url' => getenv('SOLR_URL')]);
+
+        $deleteCommand = UpdateQuery::create()->delete(Delete::fromIds(['33']))->commit(Commit::create());
+
+        $client->update($deleteCommand->toSolrJson());
+
+        $response = $client->select(SelectQuery::create()->query('id:33')->toJson());
+
+        $this->assertEmpty($response['response']['docs']);
+
+        $document = ['id' => 33, 'sample_bool' => false, 'sample_int' => 44];
+        $client->update(UpdateQuery::create()->add(Add::create($document))->commit(Commit::create())->toSolrJson());
+
+        $response = $client->select(SelectQuery::create()->query('id:33')->fields(['id'])->toJson());
+
+        $this->assertSame([['id' => '33']], $response['response']['docs']);
+
+        $client->update($deleteCommand->toSolrJson());
+
+        $response = $client->select(SelectQuery::create()->query('id:33')->toJson());
+
+        $this->assertEmpty($response['response']['docs']);
     }
 
     public function queryProvider(): iterable
     {
         yield 'it selects single document id' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('id:1')
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('id:1')
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '1']],
         ];
 
         yield 'it selects multiple document id' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('sample_bool:true')
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('sample_bool:true')
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '1'], ['id' => '3']],
         ];
 
         yield 'it selects all document ids' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('*:*')
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('*:*')
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '1'], ['id' => '2'], ['id' => '3']],
         ];
 
         yield 'it sorts documents' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('*:*')
-                                ->sort('id desc')
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('*:*')
+                    ->sort('id desc')
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '3'], ['id' => '2'], ['id' => '1']],
         ];
 
         yield 'it can limit documents' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('*:*')
-                                ->limit(2)
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('*:*')
+                    ->limit(2)
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '1'], ['id' => '2']],
         ];
 
         yield 'it can collapse documents' => [
-            'query' => static function (): JsonQuery {
-                return JsonQuery::create()
-                                ->query('*:*')
-                                ->filter([(string) Collapse::create('sample_int')])
-                                ->fields(['id']);
+            'query' => static function (): SelectQuery {
+                return SelectQuery::create()
+                    ->query('*:*')
+                    ->filter([(string) Collapse::create('sample_int')])
+                    ->fields(['id'])
+                ;
             },
             'expected' => [['id' => '1'], ['id' => '3']],
         ];

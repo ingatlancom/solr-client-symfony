@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Tests\Query;
 
-use iCom\SolrClient\Query\JsonQuery;
+use iCom\SolrClient\Query\SelectQuery;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \iCom\SolrClient\Query\JsonQuery
+ * @covers \iCom\SolrClient\Query\SelectQuery
  */
-final class JsonQueryTest extends TestCase
+final class SelectQueryTest extends TestCase
 {
     /** @test */
     public function it_maintains_consistent_key_order(): void
     {
-        $request1 = (new JsonQuery())
+        $request1 = (new SelectQuery())
             ->query('*:*')
             ->filter(['field' => 'value'])
             ->facet(['field' => 'value'])
@@ -32,7 +32,7 @@ final class JsonQueryTest extends TestCase
             ->offset(2)
         ;
 
-        $request2 = (new JsonQuery())
+        $request2 = (new SelectQuery())
             ->facet(['field' => 'value'])
             ->filter(['field' => 'value'])
             ->offset(2)
@@ -54,7 +54,7 @@ final class JsonQueryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageRegExp('#^Invalid keys "foo" found. Valid keys are "query.+?".$#');
 
-        new JsonQuery(['foo' => 'bar', 'query' => '*:*']);
+        new SelectQuery(['foo' => 'bar', 'query' => '*:*']);
     }
 
     /** @test */
@@ -63,7 +63,7 @@ final class JsonQueryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Type of field "query" should be "string", "array" given.');
 
-        new JsonQuery(['query' => []]);
+        new SelectQuery(['query' => []]);
     }
 
     /** @test */
@@ -72,7 +72,7 @@ final class JsonQueryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid value for "json" option: Type is not supported.');
 
-        (new JsonQuery(['fields' => [opendir(__DIR__)]]))->toJson();
+        (new SelectQuery(['fields' => [opendir(__DIR__)]]))->toJson();
     }
 
     /** @test */
@@ -89,7 +89,7 @@ final class JsonQueryTest extends TestCase
             'params' => ['debug' => 'true'],
         ];
 
-        $query = JsonQuery::create()
+        $query = SelectQuery::create()
             ->query($body['query'])
             ->filter($body['filter'])
             ->fields($body['fields'])
@@ -97,7 +97,8 @@ final class JsonQueryTest extends TestCase
             ->sort($body['sort'])
             ->offset($body['offset'])
             ->limit($body['limit'])
-            ->params($body['params']);
+            ->params($body['params'])
+        ;
 
         $this->assertSame($body, $query->toArray());
     }
@@ -105,7 +106,7 @@ final class JsonQueryTest extends TestCase
     /** @test */
     public function it_removes_keys_from_body_with_null_value(): void
     {
-        $query = new JsonQuery(['query' => '*:*', 'sort' => 'id asc', 'offset' => 3, 'limit' => 10]);
+        $query = new SelectQuery(['query' => '*:*', 'sort' => 'id asc', 'offset' => 3, 'limit' => 10]);
 
         $this->assertArrayNotHasKey('filter', $query->toArray());
         $this->assertArrayNotHasKey('fields', $query->toArray());

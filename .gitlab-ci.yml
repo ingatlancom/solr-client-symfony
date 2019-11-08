@@ -33,16 +33,15 @@ integration-tests:
     variables:
         DOCKER_DRIVER: overlay2
         SOLR_IMAGE: solr:8.2-slim
-        SOLR_HOST: localhost
-        SOLR_PORT: 8983
+        SOLR_URL: http://localhost:8983/solr/sample
     script:
         - cp $PWD/tests/Fixtures/sample.json $PWD/.docker/solr/data
-        - docker run -d --name solr -p $SOLR_PORT:$SOLR_PORT -v $PWD/.docker/solr/data:/opt/solr/data -v $PWD/.docker/solr/cores/sample:/sample $SOLR_IMAGE
+        - docker run -d --name solr -p 8983:8983 -v $PWD/.docker/solr/data:/opt/solr/data -v $PWD/.docker/solr/cores/sample:/sample $SOLR_IMAGE
         - docker exec solr wait-for-solr.sh
         - docker exec solr solr create -V -c sample -d /sample
         - docker exec solr post -c sample data/sample.json
         - >
-            docker run --network host -e SOLR_HOST=$SOLR_HOST -v $PWD:/app -v $PWD/.composer-cache:/.composer-cache -w /app $PHP_IMAGE_UPPER /bin/sh -c "
+            docker run --network host -e SOLR_URL=$SOLR_URL -v $PWD:/app -v $PWD/.composer-cache:/.composer-cache -w /app $PHP_IMAGE_UPPER /bin/sh -c "
             curl -sS https://getcomposer.org/installer | php &&
             php composer.phar config -g cache-dir /.composer-cache &&
             php composer.phar update --ansi &&
