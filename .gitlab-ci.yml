@@ -14,7 +14,7 @@ before_script:
 tests:php-lower:
     image: $PHP_IMAGE_LOWER
     script:
-        - php composer.phar update --ansi --prefer-lowest
+        - php composer.phar update --ansi --prefer-lowest --prefer-stable
         - php vendor/bin/phpunit
 
 tests:php-upper:
