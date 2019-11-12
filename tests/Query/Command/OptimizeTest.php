@@ -28,12 +28,12 @@ final class OptimizeTest extends TestCase
 
         $this->assertEquals('{}', $optimize->toJson());
 
-        $optimize = $optimize->enableMaxSegments()->enableWaitSearcher();
+        $optimize = $optimize->enableWaitSearcher();
 
-        $this->assertEquals('{"waitSearcher":true,"maxSegments":true}', $optimize->toJson());
+        $this->assertEquals('{"waitSearcher":true}', $optimize->toJson());
 
-        $optimize = $optimize->disableMaxSegments()->disableWaitSearcher();
+        $optimize = $optimize->disableWaitSearcher()->maxSegments(1024);
 
-        $this->assertEquals('{"waitSearcher":false,"maxSegments":false}', $optimize->toJson());
+        $this->assertEquals('{"waitSearcher":false,"maxSegments":1024}', $optimize->toJson());
     }
 }

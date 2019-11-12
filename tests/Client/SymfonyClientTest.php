@@ -15,9 +15,6 @@ namespace iCom\SolrClient\Tests\Client;
 
 use iCom\SolrClient\Client\SymfonyClient;
 use iCom\SolrClient\Query\Collapse;
-use iCom\SolrClient\Query\Command\Add;
-use iCom\SolrClient\Query\Command\Commit;
-use iCom\SolrClient\Query\Command\Delete;
 use iCom\SolrClient\Query\SelectQuery;
 use iCom\SolrClient\Query\UpdateQuery;
 use iCom\SolrClient\SolrClient;
@@ -89,7 +86,7 @@ final class SymfonyClientTest extends TestCase
     {
         $client = SolrClient::create(['base_url' => getenv('SOLR_URL')]);
 
-        $deleteCommand = UpdateQuery::create()->delete(Delete::fromIds(['33']))->commit(Commit::create());
+        $deleteCommand = UpdateQuery::create()->deleteByIds(['33'])->commit();
 
         $client->update($deleteCommand->toSolrJson());
 
@@ -98,7 +95,7 @@ final class SymfonyClientTest extends TestCase
         $this->assertEmpty($response['response']['docs']);
 
         $document = ['id' => 33, 'sample_bool' => false, 'sample_int' => 44];
-        $client->update(UpdateQuery::create()->add(Add::create($document))->commit(Commit::create())->toSolrJson());
+        $client->update(UpdateQuery::create()->add($document)->commit()->toSolrJson());
 
         $response = $client->select(SelectQuery::create()->query('id:33')->fields(['id'])->toJson());
 

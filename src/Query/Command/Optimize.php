@@ -49,18 +49,10 @@ final class Optimize implements Command
         return $commit;
     }
 
-    public function enableMaxSegments(): self
+    public function maxSegments(int $maxSegments): self
     {
         $commit = clone $this;
-        $commit->options['maxSegments'] = true;
-
-        return $commit;
-    }
-
-    public function disableMaxSegments(): self
-    {
-        $commit = clone $this;
-        $commit->options['maxSegments'] = false;
+        $commit->options['maxSegments'] = $maxSegments;
 
         return $commit;
     }

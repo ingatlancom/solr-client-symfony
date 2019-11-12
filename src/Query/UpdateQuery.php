@@ -42,30 +42,67 @@ final class UpdateQuery
         return new self($commands);
     }
 
-    public function add(Add $add): self
+    public function add(array $document, ?int $commitWithin = null, ?bool $overwrite = null): self
     {
+        $add = Add::create($document);
+
+        if (null !== $overwrite) {
+            $add = $overwrite ? $add->enableOverWrite() : $add->disableOverWrite();
+        }
+
+        if (null !== $commitWithin) {
+            $add = $add->commitWithin($commitWithin);
+        }
+
         $this->addCommand($add);
 
         return $this;
     }
 
-    public function commit(Commit $commit): self
+    public function commit(?bool $waitSearcher = null, ?bool $expungeDeletes = null): self
     {
+        $commit = Commit::create();
+
+        if (null !== $waitSearcher) {
+            $commit = $waitSearcher ? $commit->enableWaitSearcher() : $commit->disableWaitSearcher();
+        }
+
+        if (null !== $expungeDeletes) {
+            $commit = $expungeDeletes ? $commit->enableExpungeDeletes() : $commit->disableExpungeDeletes();
+        }
+
         $this->addCommand($commit);
 
         return $this;
     }
 
-    public function optimize(Optimize $optimize): self
+    public function optimize(?bool $waitSearcher = null, ?int $maxSegments = null): self
     {
+        $optimize = Optimize::create();
+
+        if (null !== $waitSearcher) {
+            $optimize = $waitSearcher ? $optimize->enableWaitSearcher() : $optimize->disableWaitSearcher();
+        }
+
+        if (null !== $maxSegments) {
+            $optimize = $optimize->maxSegments($maxSegments);
+        }
+
         $this->addCommand($optimize);
 
         return $this;
     }
 
-    public function delete(Delete $delete): self
+    public function deleteByIds(array $ids): self
     {
-        $this->addCommand($delete);
+        $this->addCommand(Delete::fromIds($ids));
+
+        return $this;
+    }
+
+    public function deleteByQuery(SelectQuery $query): self
+    {
+        $this->addCommand(Delete::fromQuery($query));
 
         return $this;
     }
