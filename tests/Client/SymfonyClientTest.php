@@ -66,6 +66,27 @@ final class SymfonyClientTest extends TestCase
         $this->assertEquals(['message' => 'called!'], $response);
     }
 
+    /** @test */
+    public function it_accepts_object(): void
+    {
+        $httpClient = new MockHttpClient(new MockResponse('{"message": "called!"}'));
+
+        $client = new SymfonyClient(['base_url' => 'http://127.0.0.1'], $httpClient);
+        $response = $client->select(SelectQuery::create()->query('*:*'));
+
+        $this->assertEquals(['message' => 'called!'], $response);
+    }
+
+    /** @test */
+    public function it_throws_exception_for_wrong_body_type(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageRegExp('#^Client can accept only string or .+, but "object" given.$#');
+
+        $client = new SymfonyClient(['base_url' => 'http://127.0.0.1'], new MockHttpClient());
+        $client->select(Collapse::create('id'));
+    }
+
     /**
      * @test
      * @group integration
@@ -73,7 +94,7 @@ final class SymfonyClientTest extends TestCase
      */
     public function it_can_query_solr(\Closure $query, array $expected)
     {
-        $response = SolrClient::create(['base_url' => getenv('SOLR_URL')])->select($query()->toJson());
+        $response = SolrClient::create(['base_url' => getenv('SOLR_URL')])->select($query());
 
         $this->assertSame($expected, $response['response']['docs']);
     }
@@ -86,24 +107,24 @@ final class SymfonyClientTest extends TestCase
     {
         $client = SolrClient::create(['base_url' => getenv('SOLR_URL')]);
 
-        $deleteCommand = UpdateQuery::create()->deleteByIds(['33'])->commit();
+        $deleteQuery = UpdateQuery::create()->deleteByIds(['33'])->commit();
 
-        $client->update($deleteCommand->toSolrJson());
+        $client->update($deleteQuery);
 
-        $response = $client->select(SelectQuery::create()->query('id:33')->toJson());
+        $response = $client->select(SelectQuery::create()->query('id:33'));
 
         $this->assertEmpty($response['response']['docs']);
 
         $document = ['id' => 33, 'sample_bool' => false, 'sample_int' => 44];
-        $client->update(UpdateQuery::create()->add($document)->commit()->toSolrJson());
+        $client->update(UpdateQuery::create()->add($document)->commit());
 
-        $response = $client->select(SelectQuery::create()->query('id:33')->fields(['id'])->toJson());
+        $response = $client->select(SelectQuery::create()->query('id:33')->fields(['id']));
 
         $this->assertSame([['id' => '33']], $response['response']['docs']);
 
-        $client->update($deleteCommand->toSolrJson());
+        $client->update($deleteQuery);
 
-        $response = $client->select(SelectQuery::create()->query('id:33')->toJson());
+        $response = $client->select(SelectQuery::create()->query('id:33'));
 
         $this->assertEmpty($response['response']['docs']);
     }

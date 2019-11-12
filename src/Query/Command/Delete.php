@@ -34,7 +34,7 @@ final class Delete implements Command
         return $delete;
     }
 
-    public static function fromQuery(SelectQuery $query)
+    public static function fromQuery(SelectQuery $query): self
     {
         $delete = new self();
         $delete->value = $query;
@@ -42,14 +42,13 @@ final class Delete implements Command
         return $delete;
     }
 
-    public function getValue()
-    {
-        return $this->value;
-    }
-
     public function toJson(): string
     {
-        return self::jsonEncode($this->value, JSON_UNESCAPED_SLASHES);
+        if ($this->value instanceof SelectQuery) {
+            return $this->value->toJson();
+        }
+
+        return self::jsonEncode($this->value);
     }
 
     public function getName(): string

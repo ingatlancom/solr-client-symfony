@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Query;
 
+use iCom\SolrClient\JsonQuery;
 use iCom\SolrClient\Query\Command\Add;
 use iCom\SolrClient\Query\Command\Commit;
 use iCom\SolrClient\Query\Command\Delete;
@@ -25,7 +26,7 @@ use iCom\SolrClient\Query\Command\Optimize;
  *
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#sending-json-update-commands
  */
-final class UpdateQuery
+final class UpdateQuery implements JsonQuery
 {
     /** @var array|iterable|Command[] */
     private $commands = [];
@@ -107,7 +108,7 @@ final class UpdateQuery
         return $this;
     }
 
-    public function toSolrJson(): string
+    public function toJson(): string
     {
         $commands = [];
         foreach ($this->commands as $command) {

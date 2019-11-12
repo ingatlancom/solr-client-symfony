@@ -28,7 +28,7 @@ final class Commit implements Command
         'expungeDeletes' => null,
     ];
 
-    public static function create()
+    public static function create(): self
     {
         return new self();
     }

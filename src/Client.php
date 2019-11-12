@@ -34,13 +34,13 @@ interface Client
      *  - trailing (extra) commas are silently ignored (e.g., [9,4,3,])
      *  - nbsp (non-break space, \u00a0) is treated as whitespace.
      *
-     * @param string $jsonBody JSON Query. @see https://lucene.apache.org/solr/guide/8_3/json-query-dsl.html
+     * @param string|JsonQuery $jsonQuery JSON Query. @see https://lucene.apache.org/solr/guide/8_3/json-query-dsl.html
      *
      * @return array
      *
      * @throws CommunicationError When an error happens while calling the Solr server API.
      */
-    public function select(string $jsonBody): array;
+    public function select($jsonQuery): array;
 
     /**
      * Runs a JSON formatted update query.
@@ -50,11 +50,11 @@ interface Client
      *  - add multiple JSON document
      *  - or send JSON update commands
      *
-     * @param string $jsonBody @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#json-formatted-index-updates
+     * @param string|JsonQuery $jsonQuery @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#json-formatted-index-updates
      *
      * @return array
      *
      * @throws CommunicationError When an error happens while calling the Solr server API.
      */
-    public function update(string $jsonBody): array;
+    public function update($jsonQuery): array;
 }

@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace iCom\SolrClient\Query;
 
 use iCom\SolrClient\JsonHelper;
+use iCom\SolrClient\JsonQuery;
 
-final class SelectQuery implements \JsonSerializable
+final class SelectQuery implements JsonQuery
 {
     use JsonHelper;
 
@@ -45,11 +46,6 @@ final class SelectQuery implements \JsonSerializable
         }
 
         $this->body = array_replace(array_fill_keys(array_keys($this->types), null), $body);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toJson();
     }
 
     public static function create(array $body = []): self
@@ -123,16 +119,6 @@ final class SelectQuery implements \JsonSerializable
 
     public function toJson(): string
     {
-        return self::jsonEncode($this->toArray());
-    }
-
-    public function toArray(): array
-    {
-        return array_filter($this->body);
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
+        return self::jsonEncode(array_filter($this->body), \JSON_UNESCAPED_UNICODE);
     }
 }

@@ -32,12 +32,12 @@ final class UpdateQueryTest extends TestCase
         $commands->deleteByIds(['1', '2', '3']);
         $commands->deleteByQuery(SelectQuery::create()->query('id:"1"'));
 
-        $this->assertSame('{"add":{"doc":{"id":1}},"add":{"doc":{"id":2},"commitWithin":1000,"overwrite":false},"add":{"doc":{"id":3},"commitWithin":500},"delete":["1","2","3"],"delete":{"query":"id:\"1\""}}', $commands->toSolrJson());
+        $this->assertSame('{"add":{"doc":{"id":1}},"add":{"doc":{"id":2},"commitWithin":1000,"overwrite":false},"add":{"doc":{"id":3},"commitWithin":500},"delete":["1","2","3"],"delete":{"query":"id:\"1\""}}', $commands->toJson());
     }
 
     /** @test */
     public function it_converts_optimize_and_commit_to_json_objects(): void
     {
-        $this->assertSame('{"commit":{},"optimize":{}}', UpdateQuery::create()->commit()->optimize()->toSolrJson());
+        $this->assertSame('{"commit":{},"optimize":{}}', UpdateQuery::create()->commit()->optimize()->toJson());
     }
 }

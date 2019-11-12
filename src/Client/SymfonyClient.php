@@ -15,6 +15,7 @@ namespace iCom\SolrClient\Client;
 
 use iCom\SolrClient\Client;
 use iCom\SolrClient\Exception\CommunicationError;
+use iCom\SolrClient\JsonQuery;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -46,12 +47,12 @@ final class SymfonyClient implements Client
         );
     }
 
-    public function select(string $jsonBody): array
+    public function select($jsonBody): array
     {
         return $this->send('GET', 'select', $jsonBody);
     }
 
-    public function update(string $jsonBody): array
+    public function update($jsonBody): array
     {
         return $this->send('POST', 'update', $jsonBody);
     }
@@ -60,7 +61,7 @@ final class SymfonyClient implements Client
     {
         $options = [];
         if ($body) {
-            $options['body'] = $body;
+            $options['body'] = $this->getBody($body);
         }
 
         try {
@@ -70,5 +71,18 @@ final class SymfonyClient implements Client
         } catch (ExceptionInterface $e) {
             throw CommunicationError::fromUpstreamException($e);
         }
+    }
+
+    private function getBody($body): string
+    {
+        if ($body instanceof JsonQuery) {
+            return $body->toJson();
+        }
+
+        if (!\is_string($body) || '{' !== $body[0]) {
+            throw new \InvalidArgumentException(sprintf('Client can accept only string or %s, but "%s" given.', JsonQuery::class, \gettype($body)));
+        }
+
+        return $body;
     }
 }

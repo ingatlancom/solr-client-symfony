@@ -40,12 +40,7 @@ final class SelectQueryTest extends TestCase
             ->limit(1)
         ;
 
-        $expected = ['query' => '*:*', 'filter' => ['field' => 'value'], 'facet' => ['field' => 'value'], 'offset' => 2, 'limit' => 1];
-        $this->assertSame($expected, $request1->toArray());
         $this->assertSame($request1->toJson(), $request2->toJson());
-        $this->assertSame($request1->toArray(), $request2->toArray());
-        $this->assertSame((string) $request1, (string) $request2);
-        $this->assertSame(json_encode($request1), json_encode($request2));
     }
 
     /** @test */
@@ -100,7 +95,7 @@ final class SelectQueryTest extends TestCase
             ->params($body['params'])
         ;
 
-        $this->assertSame($body, $query->toArray());
+        $this->assertSame($body, \json_decode($query->toJson(), true));
     }
 
     /** @test */
@@ -108,9 +103,9 @@ final class SelectQueryTest extends TestCase
     {
         $query = new SelectQuery(['query' => '*:*', 'sort' => 'id asc', 'offset' => 3, 'limit' => 10]);
 
-        $this->assertArrayNotHasKey('filter', $query->toArray());
-        $this->assertArrayNotHasKey('fields', $query->toArray());
-        $this->assertArrayNotHasKey('facet', $query->toArray());
-        $this->assertArrayNotHasKey('params', $query->toArray());
+        $this->assertStringNotContainsString('filter', $query->toJson());
+        $this->assertStringNotContainsString('fields', $query->toJson());
+        $this->assertStringNotContainsString('facet', $query->toJson());
+        $this->assertStringNotContainsString('params', $query->toJson());
     }
 }
