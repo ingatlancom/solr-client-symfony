@@ -92,7 +92,7 @@ final class SymfonyClientTest extends TestCase
      * @group integration
      * @dataProvider queryProvider
      */
-    public function it_can_query_solr(\Closure $query, array $expected)
+    public function it_can_query_solr(\Closure $query, array $expected): void
     {
         $response = SolrClient::create(['base_url' => getenv('SOLR_URL')])->select($query());
 
@@ -103,7 +103,7 @@ final class SymfonyClientTest extends TestCase
      * @test
      * @group integration
      */
-    public function it_can_update_solr()
+    public function it_can_update_solr(): void
     {
         $client = SolrClient::create(['base_url' => getenv('SOLR_URL')]);
 

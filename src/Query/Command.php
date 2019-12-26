@@ -17,15 +17,11 @@ interface Command
 {
     /**
      * Returns the JSON representation of the command's value.
-     *
-     * @return string
      */
     public function toJson(): string;
 
     /**
      * Returns the name of the command.
-     *
-     * @return string
      */
     public function getName(): string;
 }

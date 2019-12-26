@@ -1,0 +1,193 @@
+name: CI
+on: [push]
+jobs:
+    tests:
+        runs-on: ubuntu-18.04
+        strategy:
+            fail-fast: false
+            matrix:
+                php:
+                    - '7.1'
+                    - '7.4'
+                include:
+                    - php: '7.1'
+                      deps: low
+                    - php: '7.4'
+                      coverage: pcov
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: curl, mbstring
+                  coverage: ${{ matrix.coverage }}
+                  pecl: false
+
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache dependencies
+              uses: actions/cache@v1
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-php${{ matrix.php }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-php${{ matrix.php }}
+                      ${{ runner.os }}-composer
+
+            - name: Cache build
+              uses: actions/cache@v1
+              with:
+                  path: build
+                  key: ${{ runner.os }}-build-php${{ matrix.php }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-php${{ matrix.php }}
+                      ${{ runner.os }}-build
+
+            - name: Install Symfony Flex
+              run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
+
+            - name: Install dependencies
+              run: |
+                  if [[ '${{ matrix.deps }}' == 'low' ]]; then
+                    export COMPOSER_OPS="--prefer-lowest"
+                  fi
+                  composer update --prefer-dist --no-progress --no-suggest --ansi $COMPOSER_OPS
+
+            - name: Run test suit
+              if: (!matrix.coverage)
+              run: vendor/bin/phpunit
+
+            - name: Run test suit with coverage
+              if: matrix.coverage == 'pcov'
+              run: |
+                  composer require pcov/clobber
+                  vendor/bin/pcov clobber
+                  php -dpcov.enabled=1 vendor/bin/phpunit --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
+
+            - name: Run mutation tests
+              if: matrix.coverage == 'pcov'
+              run: |
+                  [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.14.2/infection.phar -o build/bin/infection
+                  php -dpcov.enabled=1 build/bin/infection --coverage=build --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
+
+            - name: Upload coverage results to Codecov
+              uses: codecov/codecov-action@v1
+              if: matrix.coverage == 'pcov' && success()
+              with:
+                  name: phpunit-php${{ matrix.php }}
+                  flags: phpunit
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  fail_ci_if_error: true
+
+    code-analysis:
+        runs-on: ubuntu-18.04
+        strategy:
+            fail-fast: false
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v1
+                with:
+                    php-version: '7.4'
+                    extensions: curl, mbstring
+
+            -   name: Get Composer Cache Directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache dependencies
+                uses: actions/cache@v1
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-php${{ matrix.php }}
+                    restore-keys: |
+                        ${{ runner.os }}-composer-php${{ matrix.php }}
+                        ${{ runner.os }}-composer
+
+            -   name: Cache build
+                uses: actions/cache@v1
+                with:
+                    path: build
+                    key: ${{ runner.os }}-build-php${{ matrix.php }}
+                    restore-keys: |
+                        ${{ runner.os }}-build-php${{ matrix.php }}
+                        ${{ runner.os }}-build
+
+            -   name: Install Symfony Flex
+                run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
+
+            -   name: Validate composer.json and composer.lock
+                run: composer validate
+
+            -   name: Install dependencies
+                run: composer update --prefer-dist --no-progress --no-suggest --ansi
+
+            -   name: Download build dependencies
+                run: |
+                    [ -e build/bin/phpstan ] || curl -Ls https://github.com/phpstan/phpstan/releases/download/0.11.16/phpstan.phar -o build/bin/phpstan
+                    [ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -o build/bin/php-cs-fixer
+                    [ -e build/bin/security-checker ] || curl -Ls https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker
+
+            -   name: PHPStan
+                run: php build/bin/phpstan analyse --no-progress --ansi
+
+            -   name: PHP-CS-Fixer
+                run: php build/bin/php-cs-fixer fix --diff --ansi --dry-run
+
+            -   name: Security check
+                run: php build/bin/security-checker security:check
+
+    integration-tests:
+        runs-on: ubuntu-18.04
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup Docker
+                run: |
+                    cp $PWD/tests/Fixtures/sample.json $PWD/.docker/solr/data
+                    docker-compose up -d solr
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v1
+                with:
+                    php-version: '7.4'
+                    extensions: curl, mbstring
+
+            -   name: Get Composer Cache Directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            -   name: Cache dependencies
+                uses: actions/cache@v1
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-php${{ matrix.php }}
+                    restore-keys: |
+                        ${{ runner.os }}-composer-php${{ matrix.php }}
+                        ${{ runner.os }}-composer
+
+            -   name: Install Symfony Flex
+                run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
+
+            -   name: Install Dependencies
+                run: composer update --prefer-dist --no-progress --no-suggest --ansi
+
+            -   name: Setup Solr
+                run: |
+                    docker-compose exec -T solr wait-for-solr.sh
+                    docker-compose exec -T solr solr create -V -c sample -d /sample
+                    docker-compose exec -T solr post -c sample data/sample.json
+
+            -   name: PHPUnit
+                env:
+                    SOLR_URL: http://localhost:8983/solr/sample
+                run: |
+                    vendor/bin/phpunit --group integration
+
+            -   name: Stop Docker
+                run: docker-compose down

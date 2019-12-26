@@ -36,7 +36,7 @@
             "php build/bin/phpstan analyse src tests -l 7 --no-progress --ansi || php build/bin/psalm || true"
         ],
         "cs": [
-            "[ -e build/bin/php-cs-fixer ] || curl -L https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.15.3/php-cs-fixer.phar -o build/bin/php-cs-fixer",
+            "[ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -o build/bin/php-cs-fixer",
             "php build/bin/php-cs-fixer fix --diff --ansi --dry-run || true"
         ],
         "sc": [

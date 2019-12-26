@@ -22,8 +22,6 @@ interface JsonQuery
      *            Therefore you can expect this to be an invalid JSON string.
      *
      * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#sending-json-update-commands
-     *
-     * @return string
      */
     public function toJson(): string;
 }
