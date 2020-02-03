@@ -39,10 +39,10 @@ Please make sure to update tests as appropriate. For details please consult with
 
 [MIT][6]
 
-[0]: https://github.com/1ed/solr-client-symfony/workflows/CI/badge.svg
-[1]: https://github.com/1ed/solr-client-symfony/actions?workflow=CI
-[2]: https://codecov.io/gh/1ed/solr-client-symfony/branch/master/graph/badge.svg
-[3]: https://codecov.io/gh/1ed/solr-client-symfony/branch/master
+[0]: https://github.com/ingatlancom/solr-client-symfony/workflows/CI/badge.svg
+[1]: https://github.com/ingatlancom/solr-client-symfony/actions?workflow=CI
+[2]: https://codecov.io/gh/ingatlancom/solr-client-symfony/branch/master/graph/badge.svg
+[3]: https://codecov.io/gh/ingatlancom/solr-client-symfony
 [4]: https://lucene.apache.org/solr/
 [5]: CONTRIBUTING.md
 [6]: https://choosealicense.com/licenses/mit/
