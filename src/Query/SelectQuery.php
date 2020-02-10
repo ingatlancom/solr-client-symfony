@@ -69,6 +69,14 @@ final class SelectQuery implements JsonQuery
         return $q;
     }
 
+    public function withFilter(string $filter): self
+    {
+        $q = clone $this;
+        $q->body['filter'][] = $filter;
+
+        return $q;
+    }
+
     public function fields(array $fields): self
     {
         $q = clone $this;
