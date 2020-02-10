@@ -108,4 +108,14 @@ final class SelectQueryTest extends TestCase
         $this->assertStringNotContainsString('facet', $query->toJson());
         $this->assertStringNotContainsString('params', $query->toJson());
     }
+
+    /** @test */
+    public function it_can_append_multiple_filters(): void
+    {
+        $query = (new SelectQuery())->filter(['id:1'])->withFilter('id:2')->withFilter('id:3');
+
+        $this->assertStringContainsString('id:1', $query->toJson());
+        $this->assertStringContainsString('id:2', $query->toJson());
+        $this->assertStringContainsString('id:3', $query->toJson());
+    }
 }
