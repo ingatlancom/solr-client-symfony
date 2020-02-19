@@ -59,14 +59,14 @@ jobs:
 
             - name: Run test suit
               if: (!matrix.coverage)
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --testdox
 
             - name: Run test suit with coverage
               if: matrix.coverage == 'pcov'
               run: |
                   composer require pcov/clobber
                   vendor/bin/pcov clobber
-                  php -dpcov.enabled=1 vendor/bin/phpunit --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
+                  php -dpcov.enabled=1 vendor/bin/phpunit --testdox --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
 
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
@@ -187,7 +187,7 @@ jobs:
                 env:
                     SOLR_URL: http://localhost:8983/solr/sample
                 run: |
-                    vendor/bin/phpunit --group integration
+                    vendor/bin/phpunit --testdox --group integration
 
             -   name: Stop Docker
                 run: docker-compose down

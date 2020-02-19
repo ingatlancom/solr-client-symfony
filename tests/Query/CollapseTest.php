@@ -112,5 +112,15 @@ final class CollapseTest extends TestCase
             static function (): Collapse { return Collapse::create('id')->size(50000); },
             '{!collapse field=id size=50000}',
         ];
+
+        yield 'cache-true' => [
+            static function (): Collapse { return Collapse::create('id')->cache(true); },
+            '{!collapse field=id cache=true}',
+        ];
+
+        yield 'cache-false' => [
+            static function (): Collapse { return Collapse::create('id')->cache(false); },
+            '{!collapse field=id cache=false}',
+        ];
     }
 }

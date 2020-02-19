@@ -19,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \iCom\SolrClient\Query\Command\Delete
+ *
+ * @uses \iCom\SolrClient\Query\SelectQuery
  */
 final class DeleteTest extends TestCase
 {
