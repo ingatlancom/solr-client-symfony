@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Tests\Query;
 
+use iCom\SolrClient\Query\Helper\Collapse;
+use iCom\SolrClient\Query\Helper\Terms;
 use iCom\SolrClient\Query\SelectQuery;
 use PHPUnit\Framework\TestCase;
 
@@ -117,5 +119,13 @@ final class SelectQueryTest extends TestCase
         $this->assertStringContainsString('id:1', $query->toJson());
         $this->assertStringContainsString('id:2', $query->toJson());
         $this->assertStringContainsString('id:3', $query->toJson());
+    }
+
+    /** @test */
+    public function it_accepts_query_helper_filter(): void
+    {
+        $query = (new SelectQuery())->filter(['id:1', Collapse::create('collapse_field')])->withFilter(Terms::create('terms_field', [1, 2]));
+
+        $this->assertSame('{"filter":["id:1","{!collapse field=collapse_field}","{!terms f=terms_field}1,2"]}', $query->toJson());
     }
 }

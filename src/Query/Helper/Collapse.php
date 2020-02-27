@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Query\Helper;
 
-final class Collapse
+use iCom\SolrClient\Query\QueryHelper;
+
+final class Collapse implements QueryHelper
 {
     private $params = [
         'field' => null,
@@ -29,11 +31,6 @@ final class Collapse
     public function __construct(string $field)
     {
         $this->params['field'] = $field;
-    }
-
-    public function __toString(): string
-    {
-        return sprintf('{!collapse %s}', urldecode(http_build_query($this->params, '', ' ')));
     }
 
     public static function create(string $field): self
@@ -105,6 +102,11 @@ final class Collapse
         $collapse->params['cache'] = $cache ? 'true' : 'false';
 
         return $collapse;
+    }
+
+    public function toString(): string
+    {
+        return sprintf('{!collapse %s}', urldecode(http_build_query($this->params, '', ' ')));
     }
 
     private function assertSingleSort(): void

@@ -61,18 +61,18 @@ final class SelectQuery implements JsonQuery
         return $q;
     }
 
-    public function filter(array $filter): self
+    public function filter(array $filters): self
     {
         $q = clone $this;
-        $q->body['filter'] = $filter;
+        $q->body['filter'] = array_map(static function ($filter) use ($q): string { return $q->parseFilter($filter); }, $filters);
 
         return $q;
     }
 
-    public function withFilter(string $filter): self
+    public function withFilter($filter): self
     {
         $q = clone $this;
-        $q->body['filter'][] = $filter;
+        $q->body['filter'][] = $this->parseFilter($filter);
 
         return $q;
     }
@@ -128,5 +128,18 @@ final class SelectQuery implements JsonQuery
     public function toJson(): string
     {
         return self::jsonEncode(array_filter($this->body), \JSON_UNESCAPED_UNICODE);
+    }
+
+    private function parseFilter($filter): string
+    {
+        if ($filter instanceof QueryHelper) {
+            return $filter->toString();
+        }
+
+        if (!\is_string($filter)) {
+            throw new \InvalidArgumentException(sprintf('SelectQuery filter can accept only string or %s, but %s given.', QueryHelper::class, \gettype($filter)));
+        }
+
+        return $filter;
     }
 }

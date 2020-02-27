@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Query\Helper;
 
+use iCom\SolrClient\Query\QueryHelper;
+
 /**
  * Uses the Terms Query Parser.
  *
@@ -22,7 +24,7 @@ namespace iCom\SolrClient\Query\Helper;
  *
  * @see https://lucene.apache.org/solr/guide/8_4/other-parsers.html#term-query-parser
  */
-final class Terms
+final class Terms implements QueryHelper
 {
     private $params = [
         'f' => null,
@@ -45,17 +47,6 @@ final class Terms
 
         $this->params['f'] = $field;
         $this->values = $values;
-    }
-
-    public function __toString(): string
-    {
-        $params = $this->params;
-
-        if (null !== $params['separator']) {
-            $params['separator'] = sprintf('"%s"', addslashes($separator = $params['separator']));
-        }
-
-        return sprintf('{!terms %s}%s', urldecode(http_build_query($params, '', ' ')), implode($separator ?? ',', $this->values));
     }
 
     public static function create(string $field, array $values): self
@@ -89,5 +80,16 @@ final class Terms
         $terms->params['cache'] = $cache ? 'true' : 'false';
 
         return $terms;
+    }
+
+    public function toString(): string
+    {
+        $params = $this->params;
+
+        if (null !== $params['separator']) {
+            $params['separator'] = sprintf('"%s"', addslashes($separator = $params['separator']));
+        }
+
+        return sprintf('{!terms %s}%s', urldecode(http_build_query($params, '', ' ')), implode($separator ?? ',', $this->values));
     }
 }

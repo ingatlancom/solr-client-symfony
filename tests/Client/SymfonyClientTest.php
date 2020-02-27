@@ -192,7 +192,7 @@ final class SymfonyClientTest extends TestCase
             'query' => static function (): SelectQuery {
                 return SelectQuery::create()
                     ->query('*:*')
-                    ->filter([(string) Collapse::create('sample_int')->cache(false)])
+                    ->filter([Collapse::create('sample_int')->cache(false)])
                     ->fields(['id'])
                 ;
             },
@@ -203,7 +203,7 @@ final class SymfonyClientTest extends TestCase
             'query' => static function (): SelectQuery {
                 return SelectQuery::create()
                     ->query('*:*')
-                    ->filter([(string) Terms::create('id', [1, 3])->separator('"')->cache(false)])
+                    ->filter([Terms::create('id', [1, 3])->separator('"')->cache(false)])
                     ->fields(['id'])
                     ;
             },
