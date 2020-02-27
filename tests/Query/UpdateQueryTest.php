@@ -20,6 +20,12 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \iCom\SolrClient\Query\UpdateQuery
+ *
+ * @uses \iCom\SolrClient\Query\SelectQuery
+ * @uses \iCom\SolrClient\Query\Command\Add
+ * @uses \iCom\SolrClient\Query\Command\Commit
+ * @uses \iCom\SolrClient\Query\Command\Optimize
+ * @uses \iCom\SolrClient\Query\Command\Delete
  */
 final class UpdateQueryTest extends TestCase
 {
@@ -36,8 +42,18 @@ final class UpdateQueryTest extends TestCase
     }
 
     /** @test */
-    public function it_converts_optimize_and_commit_to_json_objects(): void
+    public function it_can_add_a_commit_command(): void
     {
-        $this->assertSame('{"commit":{},"optimize":{}}', UpdateQuery::create()->commit()->optimize()->toJson());
+        $this->assertSame('{"commit":{}}', UpdateQuery::create()->commit()->toJson());
+        $this->assertSame('{"commit":{"waitSearcher":true}}', UpdateQuery::create()->commit(true)->toJson());
+        $this->assertSame('{"commit":{"expungeDeletes":true}}', UpdateQuery::create()->commit(null, true)->toJson());
+    }
+
+    /** @test */
+    public function it_can_add_an_optimize_command(): void
+    {
+        $this->assertSame('{"optimize":{}}', UpdateQuery::create()->optimize()->toJson());
+        $this->assertSame('{"optimize":{"waitSearcher":true}}', UpdateQuery::create()->optimize(true)->toJson());
+        $this->assertSame('{"optimize":{"maxSegments":1}}', UpdateQuery::create()->optimize(null, 1)->toJson());
     }
 }

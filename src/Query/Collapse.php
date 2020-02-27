@@ -23,6 +23,7 @@ final class Collapse
         'nullPolicy' => null,
         'hint' => null,
         'size' => null,
+        'cache' => null,
     ];
 
     public function __construct(string $field)
@@ -94,6 +95,14 @@ final class Collapse
     {
         $collapse = clone $this;
         $collapse->params['size'] = $size;
+
+        return $collapse;
+    }
+
+    public function cache(bool $cache): self
+    {
+        $collapse = clone $this;
+        $collapse->params['cache'] = $cache ? 'true' : 'false';
 
         return $collapse;
     }
