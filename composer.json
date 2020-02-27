@@ -31,7 +31,7 @@
         ],
         "tests": ["@test-lower", "@test-upper"],
         "sa": [
-            "[ -e build/bin/phpstan ] || curl -L https://github.com/phpstan/phpstan/releases/download/0.11.16/phpstan.phar -o build/bin/phpstan",
+            "[ -e build/bin/phpstan ] || curl -L https://github.com/phpstan/phpstan/releases/download/0.11.19/phpstan.phar -o build/bin/phpstan",
             "[ -e build/bin/psalm ] || curl -L https://github.com/vimeo/psalm/releases/download/3.5.1/psalm.phar -o build/bin/psalm",
             "php build/bin/phpstan analyse src tests -l 7 --no-progress --ansi || php build/bin/psalm || true"
         ],
