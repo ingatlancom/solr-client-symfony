@@ -56,7 +56,7 @@ final class TermsTest extends TestCase
      */
     public function it_creates_terms_query_string(\Closure $terms, string $expectedQuery): void
     {
-        $this->assertSame($expectedQuery, (string) $terms());
+        $this->assertSame($expectedQuery, $terms()->toString());
     }
 
     public static function provideValidTerms(): iterable

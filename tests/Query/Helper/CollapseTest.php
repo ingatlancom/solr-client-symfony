@@ -46,7 +46,7 @@ final class CollapseTest extends TestCase
      */
     public function it_creates_filter_string(\Closure $collapse, string $expectedCollapse): void
     {
-        $this->assertSame($expectedCollapse, (string) $collapse());
+        $this->assertSame($expectedCollapse, $collapse()->toString());
     }
 
     public function multipleSortProvider(): iterable

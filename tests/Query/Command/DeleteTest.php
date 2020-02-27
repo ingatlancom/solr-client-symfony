@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 final class DeleteTest extends TestCase
 {
     /** @test */
-    public function it_can_hold_ids_or_json_query()
+    public function it_can_hold_ids_or_json_query(): void
     {
         $deleteByIds = Delete::fromIds([1, 2, 3]);
         $deleteByQuery = Delete::fromQuery(SelectQuery::create()->query('id:1'));
