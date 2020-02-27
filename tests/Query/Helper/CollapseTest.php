@@ -11,13 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace iCom\SolrClient\Tests\Query;
+namespace iCom\SolrClient\Tests\Query\Helper;
 
-use iCom\SolrClient\Query\Collapse;
+use iCom\SolrClient\Query\Helper\Collapse;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \iCom\SolrClient\Query\Collapse
+ * @covers \iCom\SolrClient\Query\Helper\Collapse
  */
 final class CollapseTest extends TestCase
 {

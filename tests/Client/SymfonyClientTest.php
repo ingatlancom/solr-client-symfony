@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace iCom\SolrClient\Tests\Client;
 
 use iCom\SolrClient\Client\SymfonyClient;
-use iCom\SolrClient\Query\Collapse;
+use iCom\SolrClient\Query\Helper\Collapse;
+use iCom\SolrClient\Query\Helper\Terms;
 use iCom\SolrClient\Query\SelectQuery;
-use iCom\SolrClient\Query\Terms;
 use iCom\SolrClient\Query\UpdateQuery;
 use iCom\SolrClient\SolrClient;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +30,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  *
  * @uses \iCom\SolrClient\JsonHelper
  * @uses \iCom\SolrClient\Query\SelectQuery
- * @uses \iCom\SolrClient\Query\Collapse
+ * @uses \iCom\SolrClient\Query\Helper\Collapse
  */
 final class SymfonyClientTest extends TestCase
 {

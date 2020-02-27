@@ -11,13 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace iCom\SolrClient\Tests\Query;
+namespace iCom\SolrClient\Tests\Query\Helper;
 
-use iCom\SolrClient\Query\Terms;
+use iCom\SolrClient\Query\Helper\Terms;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \iCom\SolrClient\Query\Terms
+ * @covers \iCom\SolrClient\Query\Helper\Terms
  */
 final class TermsTest extends TestCase
 {

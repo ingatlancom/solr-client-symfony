@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace iCom\SolrClient\Query;
+namespace iCom\SolrClient\Query\Helper;
 
 /**
  * Uses the Terms Query Parser.
