@@ -14,15 +14,16 @@ declare(strict_types=1);
 namespace iCom\SolrClient;
 
 use iCom\SolrClient\Client\SymfonyClient;
+use Symfony\Component\HttpClient\HttpClient;
 
-class SolrClient
+final class SolrClient
 {
     public static function create(array $options): Client
     {
-        if (class_exists(SymfonyClient::class)) {
-            return new SymfonyClient($options);
+        if (class_exists(HttpClient::class)) {
+            return new SymfonyClient(HttpClient::create($options));
         }
 
-        throw new \LogicException('You need to install a client implementation.');
+        throw new \LogicException('You need to install an HTTP client implementation. Try running "composer require symfony/http-client".');
     }
 }

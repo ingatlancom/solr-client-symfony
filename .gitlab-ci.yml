@@ -33,7 +33,7 @@ integration-tests:
     variables:
         DOCKER_DRIVER: overlay2
         SOLR_IMAGE: solr:8.2-slim
-        SOLR_URL: http://localhost:8983/solr/sample
+        SOLR_URL: http://localhost:8983/solr/sample/
     script:
         - cp $PWD/tests/Fixtures/sample.json $PWD/.docker/solr/data
         - docker run -d --name solr -p 8983:8983 -v $PWD/.docker/solr/data:/opt/solr/data -v $PWD/.docker/solr/cores/sample:/sample $SOLR_IMAGE

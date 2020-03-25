@@ -182,7 +182,7 @@ jobs:
 
             -   name: PHPUnit
                 env:
-                    SOLR_URL: http://localhost:8983/solr/sample
+                    SOLR_URL: http://localhost:8983/solr/sample/
                 run: |
                     vendor/bin/phpunit --testdox --group integration
 
