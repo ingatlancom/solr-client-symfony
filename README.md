@@ -1,6 +1,6 @@
 # Solr Client
 
-[![pipeline status][0]][1] [![coverage report][2]][3]
+[![pipeline status][0]][1] [![coverage report][2]][3] [![Scrutinizer Code Quality][7]][8]
 
 Simple [Solr][4] client using the JSON Request API available since Solr 5.1,
 so this client only usable after that version.
@@ -46,3 +46,5 @@ Please make sure to update tests as appropriate. For details please consult with
 [4]: https://lucene.apache.org/solr/
 [5]: CONTRIBUTING.md
 [6]: https://choosealicense.com/licenses/mit/
+[7]: https://scrutinizer-ci.com/g/ingatlancom/solr-client-symfony/badges/quality-score.png?b=master
+[8]: https://scrutinizer-ci.com/g/ingatlancom/solr-client-symfony/?branch=master
