@@ -20,6 +20,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \iCom\SolrClient\Query\SelectQuery
+ *
+ * @uses \iCom\SolrClient\Query\Helper\Collapse
+ * @uses \iCom\SolrClient\Query\Helper\Terms
  */
 final class SelectQueryTest extends TestCase
 {

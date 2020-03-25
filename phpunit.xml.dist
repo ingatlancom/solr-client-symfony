@@ -16,7 +16,7 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <env name="SOLR_URL" value="http://solr:8983/solr/sample" />
+        <env name="SOLR_URL" value="http://solr:8983/solr/sample/" />
     </php>
 
     <groups>

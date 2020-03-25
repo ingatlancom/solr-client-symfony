@@ -17,7 +17,7 @@ so this client only usable after that version.
 
     require_once dirname(__DIR__).'/vendor/autoload.php';
 
-    $client = SolrClient::create(['base_url' => 'http://127.0.0.1:8983/solr/core']);
+    $client = SolrClient::create(['base_uri' => 'http://127.0.0.1:8983/solr/core/']);
 
     try {
         $result = $client->select('{"query": "*:*"}');
