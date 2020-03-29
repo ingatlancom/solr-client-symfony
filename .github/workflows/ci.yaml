@@ -68,8 +68,8 @@ jobs:
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
               run: |
-                  [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.14.2/infection.phar -o build/bin/infection
-                  php -dpcov.enabled=1 build/bin/infection --coverage=build --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
+                  [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.16.1/infection.phar -o build/bin/infection
+                  php -dpcov.enabled=1 build/bin/infection --skip-initial-tests --coverage=build --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
 
             - name: Upload coverage results to Codecov
               uses: codecov/codecov-action@v1
