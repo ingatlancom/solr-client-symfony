@@ -39,6 +39,9 @@ final class SymfonyClientTest extends TestCase
         $callback = function ($method, $url, $options): MockResponse {
             $this->assertSame('GET', $method);
             $this->assertSame('http://127.0.0.1/select', $url);
+            $this->assertArrayHasKey('normalized_headers', $options);
+            $this->assertArrayHasKey('accept', $options['normalized_headers']);
+            $this->assertSame('Accept: application/json', $options['normalized_headers']['accept'][0]);
             $this->assertArrayHasKey('body', $options);
             $this->assertSame('{"query": "*:*"}', $options['body']);
 

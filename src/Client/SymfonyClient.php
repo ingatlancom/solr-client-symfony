@@ -40,7 +40,7 @@ final class SymfonyClient implements Client
 
     private function send(string $method, string $url, $body = null): array
     {
-        $options = ['headers' => ['Content-Type' => 'application/json']];
+        $options = ['headers' => ['Accept' => 'application/json']];
         if ($body) {
             $options['body'] = $this->getBody($body);
         }
