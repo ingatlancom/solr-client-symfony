@@ -63,13 +63,13 @@ jobs:
             - name: Run test suit with coverage
               if: matrix.coverage == 'pcov'
               run: |
-                  php -dpcov.enabled=1 vendor/bin/phpunit --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
+                  php -dpcov.enabled=1 vendor/bin/phpunit --coverage-html=build/coverage/coverage-html --coverage-xml=build/coverage/coverage-xml --coverage-clover=build/coverage/clover.xml --log-junit=build/coverage/junit.xml --coverage-text
 
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
               run: |
                   [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.16.1/infection.phar -o build/bin/infection
-                  php -dpcov.enabled=1 build/bin/infection --skip-initial-tests --coverage=build --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --ansi --show-mutations --no-progress
+                  php -dpcov.enabled=1 build/bin/infection --skip-initial-tests --coverage=build/coverage --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --no-progress --show-mutations --ansi
 
             - name: Upload coverage results to Codecov
               uses: codecov/codecov-action@v1
