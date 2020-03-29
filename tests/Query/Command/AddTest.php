@@ -22,15 +22,24 @@ use PHPUnit\Framework\TestCase;
 final class AddTest extends TestCase
 {
     /** @test */
+    public function it_has_a_name(): void
+    {
+        $add = Add::create(['id' => 1]);
+
+        $this->assertEquals('add', $add->getName());
+    }
+
+    /** @test */
     public function it_adds_commit_within(): void
     {
         $add = Add::create(['id' => 1]);
 
         $this->assertSame('{"doc":{"id":1}}', $add->toJson());
 
-        $add = $add->commitWithin(500);
+        $new = $add->commitWithin(500);
 
-        $this->assertSame('{"doc":{"id":1},"commitWithin":500}', $add->toJson());
+        $this->assertNotSame($add, $new);
+        $this->assertSame('{"doc":{"id":1},"commitWithin":500}', $new->toJson());
     }
 
     /** @test */
@@ -40,12 +49,14 @@ final class AddTest extends TestCase
 
         $this->assertSame('{"doc":{"id":1}}', $add->toJson());
 
-        $add = $add->enableOverWrite();
+        $new = $add->enableOverWrite();
 
-        $this->assertSame('{"doc":{"id":1},"overwrite":true}', $add->toJson());
+        $this->assertNotSame($add, $new);
+        $this->assertSame('{"doc":{"id":1},"overwrite":true}', $new->toJson());
 
-        $add = $add->disableOverWrite();
+        $new = $add->disableOverWrite();
 
-        $this->assertSame('{"doc":{"id":1},"overwrite":false}', $add->toJson());
+        $this->assertNotSame($add, $new);
+        $this->assertSame('{"doc":{"id":1},"overwrite":false}', $new->toJson());
     }
 }

@@ -37,11 +37,11 @@ final class SymfonyClientTest extends TestCase
     public function it_makes_http_request_to_the_select_api(): void
     {
         $callback = function ($method, $url, $options): MockResponse {
+            $headers = $options['request_headers'] ?? $options['headers'] ?? [];
             $this->assertSame('GET', $method);
             $this->assertSame('http://127.0.0.1/select', $url);
-            $this->assertArrayHasKey('normalized_headers', $options);
-            $this->assertArrayHasKey('accept', $options['normalized_headers']);
-            $this->assertSame('Accept: application/json', $options['normalized_headers']['accept'][0]);
+            $this->assertContains('accept: application/json', array_map('strtolower', $headers));
+            $this->assertContains('content-type: application/json', array_map('strtolower', $headers));
             $this->assertArrayHasKey('body', $options);
             $this->assertSame('{"query": "*:*"}', $options['body']);
 
@@ -51,6 +51,25 @@ final class SymfonyClientTest extends TestCase
 
         $client = new SymfonyClient($httpClient);
         $client->select('{"query": "*:*"}');
+    }
+
+    /** @test */
+    public function it_makes_http_request_to_the_update_api(): void
+    {
+        $callback = function ($method, $url, $options): MockResponse {
+            $headers = $options['request_headers'] ?? $options['headers'] ?? [];
+            $this->assertSame('POST', $method);
+            $this->assertSame('http://127.0.0.1/update', $url);
+            $this->assertContains('accept: application/json', array_map('strtolower', $headers));
+            $this->assertArrayHasKey('body', $options);
+            $this->assertSame('{"add":{"doc":{"id":1}}}', $options['body']);
+
+            return new MockResponse('{"message": "OK"}');
+        };
+        $httpClient = new MockHttpClient($callback, 'http://127.0.0.1');
+
+        $client = new SymfonyClient($httpClient);
+        $client->update('{"add":{"doc":{"id":1}}}');
     }
 
     /** @test */
@@ -79,7 +98,7 @@ final class SymfonyClientTest extends TestCase
     public function it_throws_exception_for_wrong_body_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('#^Client can accept only string or .+, but "object" given.$#');
+        $this->expectExceptionMessageMatches(sprintf('#^Client can accept only string or ".+", but "%s" given.$#', preg_quote(Collapse::class, '#')));
 
         $client = new SymfonyClient(new MockHttpClient());
         $client->select(Collapse::create('id'));

@@ -33,4 +33,12 @@ final class DeleteTest extends TestCase
         $this->assertSame('[1,2,3]', $deleteByIds->toJson());
         $this->assertSame('{"query":"id:1"}', $deleteByQuery->toJson());
     }
+
+    /** @test */
+    public function it_has_a_name(): void
+    {
+        $delete = Delete::fromIds([1, 2, 3]);
+
+        $this->assertSame('delete', $delete->getName());
+    }
 }

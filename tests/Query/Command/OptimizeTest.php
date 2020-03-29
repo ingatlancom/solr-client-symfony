@@ -22,18 +22,45 @@ use PHPUnit\Framework\TestCase;
 final class OptimizeTest extends TestCase
 {
     /** @test */
-    public function it_can_toggle_options(): void
+    public function it_is_empty_by_default(): void
+    {
+        $optimize = Optimize::create();
+
+        $this->assertEquals('{}', $optimize->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_name(): void
     {
         $optimize = new Optimize();
 
-        $this->assertEquals('{}', $optimize->toJson());
+        $this->assertEquals('optimize', $optimize->getName());
+    }
 
-        $optimize = $optimize->enableWaitSearcher();
+    /** @test */
+    public function its_has_a_wait_searcher_option(): void
+    {
+        $optimize = new Optimize();
 
-        $this->assertEquals('{"waitSearcher":true}', $optimize->toJson());
+        $new = $optimize->enableWaitSearcher();
 
-        $optimize = $optimize->disableWaitSearcher()->maxSegments(1024);
+        $this->assertNotSame($optimize, $new);
+        $this->assertEquals('{"waitSearcher":true}', $new->toJson());
 
-        $this->assertEquals('{"waitSearcher":false,"maxSegments":1024}', $optimize->toJson());
+        $new = $optimize->disableWaitSearcher();
+
+        $this->assertNotSame($optimize, $new);
+        $this->assertEquals('{"waitSearcher":false}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_max_segments_option(): void
+    {
+        $optimize = new Optimize();
+
+        $new = $optimize->maxSegments(1024);
+
+        $this->assertNotSame($optimize, $new);
+        $this->assertEquals('{"maxSegments":1024}', $new->toJson());
     }
 }
