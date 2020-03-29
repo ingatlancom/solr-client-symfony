@@ -38,9 +38,15 @@ final class SymfonyClient implements Client
         return $this->send('POST', 'update', $jsonBody);
     }
 
+    /**
+     * @param JsonQuery|string|null $body
+     */
     private function send(string $method, string $url, $body = null): array
     {
-        $options = ['headers' => ['Accept' => 'application/json']];
+        $options = ['headers' => [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ]];
         if ($body) {
             $options['body'] = $this->getBody($body);
         }
@@ -54,6 +60,9 @@ final class SymfonyClient implements Client
         }
     }
 
+    /**
+     * @param JsonQuery|string $body
+     */
     private function getBody($body): string
     {
         if ($body instanceof JsonQuery) {
@@ -61,7 +70,7 @@ final class SymfonyClient implements Client
         }
 
         if (!\is_string($body) || '{' !== $body[0]) {
-            throw new \InvalidArgumentException(sprintf('Client can accept only string or %s, but "%s" given.', JsonQuery::class, \gettype($body)));
+            throw new \InvalidArgumentException(sprintf('Client can accept only string or "%s", but "%s" given.', JsonQuery::class, \get_debug_type($body)));
         }
 
         return $body;

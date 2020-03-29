@@ -22,18 +22,50 @@ use PHPUnit\Framework\TestCase;
 final class CommitTest extends TestCase
 {
     /** @test */
-    public function it_can_toggle_options(): void
+    public function it_is_empty_by_default(): void
+    {
+        $commit = Commit::create();
+
+        $this->assertSame('{}', $commit->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_name(): void
+    {
+        $commit = Commit::create();
+
+        $this->assertEquals('commit', $commit->getName());
+    }
+
+    /** @test */
+    public function it_has_expunge_deletes_option(): void
     {
         $commit = new Commit();
 
-        $this->assertSame('{}', $commit->toJson());
+        $new = $commit->enableExpungeDeletes();
 
-        $commit = $commit->enableExpungeDeletes()->enableWaitSearcher();
+        $this->assertNotSame($commit, $new);
+        $this->assertSame('{"expungeDeletes":true}', $new->toJson());
 
-        $this->assertEquals('{"waitSearcher":true,"expungeDeletes":true}', $commit->toJson());
+        $new = $commit->disableExpungeDeletes();
 
-        $commit = $commit->disableExpungeDeletes()->disableWaitSearcher();
+        $this->assertNotSame($commit, $new);
+        $this->assertSame('{"expungeDeletes":false}', $new->toJson());
+    }
 
-        $this->assertEquals('{"waitSearcher":false,"expungeDeletes":false}', $commit->toJson());
+    /** @test */
+    public function it_has_wait_searcher_option(): void
+    {
+        $commit = new Commit();
+
+        $new = $commit->enableWaitSearcher();
+
+        $this->assertNotSame($commit, $new);
+        $this->assertSame('{"waitSearcher":true}', $new->toJson());
+
+        $new = $commit->disableWaitSearcher();
+
+        $this->assertNotSame($commit, $new);
+        $this->assertSame('{"waitSearcher":false}', $new->toJson());
     }
 }

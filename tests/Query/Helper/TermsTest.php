@@ -50,86 +50,68 @@ final class TermsTest extends TestCase
         $t->method('invalid');
     }
 
-    /**
-     * @test
-     * @dataProvider provideValidTerms
-     */
-    public function it_creates_terms_query_string(\Closure $terms, string $expectedQuery): void
+    /** @test */
+    public function it_has_a_method_option(): void
     {
-        $this->assertSame($expectedQuery, $terms()->toString());
+        $terms = Terms::create('id', [1, 2, 3]);
+        $new = $terms->method('termsFilter');
+
+        $this->assertNotSame($terms, $new);
+        $this->assertSame('{!terms f=id method=termsFilter}1,2,3', $new->toString());
     }
 
-    public static function provideValidTerms(): iterable
+    /** @test */
+    public function it_has_a_cache_option(): void
     {
-        // we need to use closures to ensure the code actually runs in the test's context so coverage can be generated
-        yield 'default-separator' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3]);
-            },
-            '{!terms f=id}1,2,3',
-        ];
+        $terms = Terms::create('id', [1, 2, 3]);
+        $new = $terms->cache(true);
 
-        yield 'method' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->method('termsFilter');
-            },
-            '{!terms f=id method=termsFilter}1,2,3',
-        ];
+        $this->assertNotSame($terms, $new);
+        $this->assertSame('{!terms f=id cache=true}1,2,3', $new->toString());
 
-        yield 'separator-space' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->separator(' ');
-            },
-            '{!terms f=id separator=" "}1 2 3',
-        ];
+        $new = $terms->cache(false);
 
-        yield 'separator-double-quote' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->separator('"');
-            },
-            '{!terms f=id separator="\""}1"2"3',
-        ];
+        $this->assertSame('{!terms f=id cache=false}1,2,3', $new->toString());
+    }
 
-        yield 'separator-single-quote' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->separator("'");
-            },
-            sprintf('{!terms f=id separator="\%s"}', "'")."1'2'3",
-        ];
+    /** @test */
+    public function it_merges_its_all_options_together(): void
+    {
+        $terms = Terms::create('other_id', [1, 2, 3])->method('termsFilter')->separator(' ')->cache(false);
 
-        yield 'separator-with-backslash' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->separator('\~');
-            },
-            sprintf('{!terms f=id separator="\%s"}1\~2\~3', "\~"),
-        ];
+        $this->assertSame('{!terms f=other_id method=termsFilter separator=" " cache=false}1 2 3', $terms->toString());
+    }
 
-        yield 'different-values' => [
-            static function (): Terms {
-                return Terms::create('id', ['doc1', 'doc2', 'doc3']);
-            },
-            '{!terms f=id}doc1,doc2,doc3',
-        ];
+    /** @test */
+    public function its_default_term_separator_is_a_comma(): void
+    {
+        $terms = Terms::create('id', [1, 2, 3]);
 
-        yield 'with-cache-true' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->cache(true);
-            },
-            '{!terms f=id cache=true}1,2,3',
-        ];
+        $this->assertSame('{!terms f=id}1,2,3', $terms->toString());
+    }
 
-        yield 'with-cache-false' => [
-            static function (): Terms {
-                return Terms::create('id', [1, 2, 3])->cache(false);
-            },
-            '{!terms f=id cache=false}1,2,3',
-        ];
+    /** @test */
+    public function its_term_separator_is_configurable(): void
+    {
+        $terms = Terms::create('id', [1, 2, 3]);
+        $new = $terms->separator(' ');
 
-        yield 'all-parts' => [
-            static function (): Terms {
-                return Terms::create('other_id', [1, 2, 3])->method('termsFilter')->separator(' ')->cache(false);
-            },
-            '{!terms f=other_id method=termsFilter separator=" " cache=false}1 2 3',
-        ];
+        $this->assertNotSame($terms, $new);
+        $this->assertSame('{!terms f=id separator=" "}1 2 3', $new->toString());
+    }
+
+    /** @test @dataProvider escapes */
+    public function it_escapes_the_term_separator_correctly(array $values, string $separator, string $expected): void
+    {
+        $terms = Terms::create('id', $values)->separator($separator);
+
+        $this->assertSame($expected, $terms->toString());
+    }
+
+    public function escapes(): iterable
+    {
+        yield 'double quote' => [[1, 2, 3], '"', '{!terms f=id separator="\""}1"2"3'];
+        yield 'single quote' => [[1, 2, 3], "'", sprintf('{!terms f=id separator="\%s"}', "'")."1'2'3"];
+        yield 'with backslash' => [[1, 2, 3], '\~', sprintf('{!terms f=id separator="\%s"}1\~2\~3', "\~")];
     }
 }

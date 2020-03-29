@@ -27,32 +27,108 @@ use PHPUnit\Framework\TestCase;
 final class SelectQueryTest extends TestCase
 {
     /** @test */
-    public function it_maintains_consistent_key_order(): void
+    public function it_is_empty_default(): void
     {
-        $request1 = (new SelectQuery())
-            ->query('*:*')
-            ->filter(['field' => 'value'])
-            ->facet(['field' => 'value'])
-            ->limit(1)
-            ->offset(2)
-        ;
+        $select = new SelectQuery();
 
-        $request2 = (new SelectQuery())
-            ->facet(['field' => 'value'])
-            ->filter(['field' => 'value'])
-            ->offset(2)
-            ->query('*:*')
-            ->limit(1)
-        ;
+        $this->assertSame('{}', $select->toJson());
+    }
 
-        $this->assertSame($request1->toJson(), $request2->toJson());
+    /** @test */
+    public function it_has_a_query_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->query('*:*');
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"query":"*:*"}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_filter_option_for_multiple_filters(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->filter(['field' => 'value']);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"filter":{"field":"value"}}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_filter_option_for_filter_expressions(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->withFilter('id:1');
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"filter":["id:1"]}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_fields_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->fields(['field1', 'field2']);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"fields":["field1","field2"]}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_sort_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->sort('id desc');
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"sort":"id desc"}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_facet_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->facet(['categories' => ['type' => 'terms', 'field' => 'cat']]);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"facet":{"categories":{"type":"terms","field":"cat"}}}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_params_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->params(['debug' => true]);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"params":{"debug":true}}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_offset_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->offset(10);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"offset":10}', $new->toJson());
+    }
+
+    /** @test */
+    public function it_has_a_limit_option(): void
+    {
+        $select = new SelectQuery();
+        $new = $select->limit(10);
+
+        $this->assertNotSame($select, $new);
+        $this->assertSame('{"limit":10}', $new->toJson());
     }
 
     /** @test */
     public function it_throws_for_invalid_params(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('#^Invalid keys "foo" found. Valid keys are "query.+?".$#');
+        $this->expectExceptionMessageMatches('#^Invalid keys "foo" found. Valid keys are "query.+?".$#');
 
         new SelectQuery(['foo' => 'bar', 'query' => '*:*']);
     }
@@ -73,6 +149,28 @@ final class SelectQueryTest extends TestCase
         $this->expectExceptionMessage('Invalid value for "json" option: Type is not supported.');
 
         (new SelectQuery(['fields' => [opendir(__DIR__)]]))->toJson();
+    }
+
+    /** @test */
+    public function it_maintains_consistent_key_order(): void
+    {
+        $request1 = (new SelectQuery())
+            ->query('*:*')
+            ->filter(['field' => 'value'])
+            ->facet(['field' => 'value'])
+            ->limit(1)
+            ->offset(2)
+        ;
+
+        $request2 = (new SelectQuery())
+            ->facet(['field' => 'value'])
+            ->filter(['field' => 'value'])
+            ->offset(2)
+            ->query('*:*')
+            ->limit(1)
+        ;
+
+        $this->assertSame($request1->toJson(), $request2->toJson());
     }
 
     /** @test */
@@ -122,6 +220,14 @@ final class SelectQueryTest extends TestCase
         $this->assertStringContainsString('id:1', $query->toJson());
         $this->assertStringContainsString('id:2', $query->toJson());
         $this->assertStringContainsString('id:3', $query->toJson());
+    }
+
+    /** @test */
+    public function it_throws_for_invalid_filter(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        SelectQuery::create()->withFilter(new \stdClass());
     }
 
     /** @test */

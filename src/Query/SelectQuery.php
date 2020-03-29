@@ -27,8 +27,8 @@ final class SelectQuery implements JsonQuery
         'fields' => 'array',
         'facet' => 'array',
         'sort' => 'string',
-        'offset' => 'integer',
-        'limit' => 'integer',
+        'offset' => 'int',
+        'limit' => 'int',
         'params' => 'array',
     ];
     private $body;
@@ -40,7 +40,7 @@ final class SelectQuery implements JsonQuery
         }
 
         foreach ($body as $key => $value) {
-            if ($this->types[$key] !== $type = \gettype($value)) {
+            if ($this->types[$key] !== $type = \get_debug_type($value)) {
                 throw new \InvalidArgumentException(sprintf('Type of field "%s" should be "%s", "%s" given.', $key, $this->types[$key], $type));
             }
         }
@@ -127,7 +127,7 @@ final class SelectQuery implements JsonQuery
 
     public function toJson(): string
     {
-        return self::jsonEncode(array_filter($this->body), \JSON_UNESCAPED_UNICODE);
+        return self::jsonEncode(new \ArrayObject(array_filter($this->body)), \JSON_UNESCAPED_UNICODE);
     }
 
     private function parseFilter($filter): string
@@ -137,7 +137,7 @@ final class SelectQuery implements JsonQuery
         }
 
         if (!\is_string($filter)) {
-            throw new \InvalidArgumentException(sprintf('SelectQuery filter can accept only string or %s, but %s given.', QueryHelper::class, \gettype($filter)));
+            throw new \InvalidArgumentException(sprintf('SelectQuery filter can accept only string or "%s", but "%s" given.', QueryHelper::class, \get_debug_type($filter)));
         }
 
         return $filter;
