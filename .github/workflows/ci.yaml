@@ -7,10 +7,10 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - '7.1'
+                    - '7.2'
                     - '7.4'
                 include:
-                    - php: '7.1'
+                    - php: '7.2'
                       deps: low
                     - php: '7.4'
                       coverage: pcov
@@ -58,12 +58,12 @@ jobs:
 
             - name: Run test suit
               if: (!matrix.coverage)
-              run: vendor/bin/phpunit --testdox
+              run: vendor/bin/phpunit
 
             - name: Run test suit with coverage
               if: matrix.coverage == 'pcov'
               run: |
-                  php -dpcov.enabled=1 vendor/bin/phpunit --testdox --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
+                  php -dpcov.enabled=1 vendor/bin/phpunit --log-junit=build/phpunit.junit.xml --coverage-xml=build/coverage-xml --coverage-clover=build/clover.xml --coverage-text
 
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
@@ -184,7 +184,7 @@ jobs:
                 env:
                     SOLR_URL: http://localhost:8983/solr/sample/
                 run: |
-                    vendor/bin/phpunit --testdox --group integration
+                    vendor/bin/phpunit --group integration
 
             -   name: Stop Docker
                 run: docker-compose down

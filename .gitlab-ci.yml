@@ -4,7 +4,7 @@ cache:
         - build/bin/
 
 variables:
-    PHP_IMAGE_LOWER: php:7.1-cli-alpine
+    PHP_IMAGE_LOWER: php:7.2-cli-alpine
     PHP_IMAGE_UPPER: php:7.3-cli-alpine
 
 before_script:
