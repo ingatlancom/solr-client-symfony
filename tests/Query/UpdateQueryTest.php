@@ -32,11 +32,12 @@ final class UpdateQueryTest extends TestCase
     /** @test */
     public function it_is_possible_to_have_multiple_commands_with_same_key(): void
     {
-        $commands = UpdateQuery::create([new Add(['id' => 1])]);
-        $commands->add(['id' => 2], 1000, false);
-        $commands->add(['id' => 3], 500);
-        $commands->deleteByIds(['1', '2', '3']);
-        $commands->deleteByQuery(SelectQuery::create()->query('id:"1"'));
+        $commands = UpdateQuery::create([new Add(['id' => 1])])
+            ->add(['id' => 2], 1000, false)
+            ->add(['id' => 3], 500)
+            ->deleteByIds(['1', '2', '3'])
+            ->deleteByQuery(SelectQuery::create()->query('id:"1"'))
+        ;
 
         $this->assertSame('{"add":{"doc":{"id":1}},"add":{"doc":{"id":2},"commitWithin":1000,"overwrite":false},"add":{"doc":{"id":3},"commitWithin":500},"delete":["1","2","3"],"delete":{"query":"id:\"1\""}}', $commands->toJson());
     }
