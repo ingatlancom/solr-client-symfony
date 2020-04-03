@@ -12,7 +12,8 @@
     "require-dev": {
         "phpunit/phpunit": "^8.5",
         "psalm/phar": "^3.10",
-        "symfony/http-client": "^4.3|^5.0"
+        "symfony/http-client": "^4.3|^5.0",
+        "symplify/easy-coding-standard-prefixed": "^7.2"
     },
     "autoload": {
         "psr-4": { "iCom\\SolrClient\\": "src/" }
@@ -38,8 +39,7 @@
             "@php vendor/bin/psalm.phar --show-info=true"
         ],
         "cs": [
-            "[ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -o build/bin/php-cs-fixer",
-            "php build/bin/php-cs-fixer fix --diff --ansi --dry-run || true"
+            "@php vendor/bin/ecs c --ansi"
         ],
         "sc": [
             "[ -e build/bin/security-checker ] || curl -L https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker",

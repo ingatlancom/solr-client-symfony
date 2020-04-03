@@ -1,0 +1,45 @@
+parameters:
+    sets:
+        - 'php70'
+        - 'php71'
+        - 'psr12'
+        - 'clean-code'
+        - 'dead-code'
+        - 'symfony'
+        - 'symfony-risky'
+    paths:
+        - 'src'
+        - 'tests'
+    exclude_files:
+        - 'tests/Fixtures/*'
+    skip:
+        PhpCsFixer\Fixer\Phpdoc\PhpdocToCommentFixer: ~
+
+services:
+    PhpCsFixer\Fixer\Basic\Psr4Fixer: ~
+    PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer: ~
+    PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer: ~
+    PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
+        header: |
+            This file is part of Solr Client Symfony package.
+
+            (c) ingatlan.com Zrt. <fejlesztes@ingatlan.com>
+
+            This source file is subject to the MIT license that is bundled
+            with this source code in the file LICENSE.
+    PhpCsFixer\Fixer\ControlStructure\NoUselessElseFixer: ~
+    PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer:
+        include: ['@@compiler_optimized']
+    PhpCsFixer\Fixer\FunctionNotation\NoUnreachableDefaultArgumentValueFixer: ~
+    PhpCsFixer\Fixer\FunctionNotation\StaticLambdaFixer: ~
+    PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer:
+        align: 'left'
+    PhpCsFixer\Fixer\PhpUnit\PhpUnitMethodCasingFixer:
+        case: 'snake_case'
+    PhpCsFixer\Fixer\PhpUnit\PhpUnitSetUpTearDownVisibilityFixer: ~
+    PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer:
+        style: 'annotation'
+    PhpCsFixer\Fixer\ReturnNotation\NoUselessReturnFixer: ~
+    PhpCsFixer\Fixer\StringNotation\HeredocToNowdocFixer: ~
+    PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer: ~
+
