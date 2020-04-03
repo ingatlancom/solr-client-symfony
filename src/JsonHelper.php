@@ -25,11 +25,11 @@ trait JsonHelper
     /**
      * @param mixed $value
      *
-     * @throws InvalidArgumentException When the value cannot be json-encoded.
+     * @throws InvalidArgumentException when the value cannot be json-encoded
      *
      * @psalm-pure
      */
-    private static function jsonEncode($value, int $flags = null, int $maxDepth = 512): string
+    private static function jsonEncode($value, ?int $flags = null, int $maxDepth = 512): string
     {
         $flags = $flags ?? (JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_PRESERVE_ZERO_FRACTION);
 

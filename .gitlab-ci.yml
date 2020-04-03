@@ -53,9 +53,8 @@ code-analysis:
         - php composer.phar validate -n --ansi --strict
         - php composer.phar update --ansi
         - "[ -e build/bin/phpstan ] || curl -Ls https://github.com/phpstan/phpstan/releases/download/0.11.19/phpstan.phar -o build/bin/phpstan"
-        - "[ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.15.3/php-cs-fixer.phar -o build/bin/php-cs-fixer"
         - "[ -e build/bin/security-checker ] || curl -Ls https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker"
+        - php vendor/bin/ecs check --ansi
         - php vendor/bin/psalm.phar --show-info=true
         - php build/bin/phpstan analyse --no-progress --ansi
-        - php build/bin/php-cs-fixer fix --diff --ansi --dry-run
         - php build/bin/security-checker security:check

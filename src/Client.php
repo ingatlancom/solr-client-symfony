@@ -36,7 +36,7 @@ interface Client
      *
      * @param string|JsonQuery $jsonQuery JSON Query. @see https://lucene.apache.org/solr/guide/8_3/json-query-dsl.html
      *
-     * @throws CommunicationError When an error happens while calling the Solr server API.
+     * @throws CommunicationError when an error happens while calling the Solr server API
      */
     public function select($jsonQuery): array;
 
@@ -50,7 +50,7 @@ interface Client
      *
      * @param string|JsonQuery $jsonQuery @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#json-formatted-index-updates
      *
-     * @throws CommunicationError When an error happens while calling the Solr server API.
+     * @throws CommunicationError when an error happens while calling the Solr server API
      */
     public function update($jsonQuery): array;
 }

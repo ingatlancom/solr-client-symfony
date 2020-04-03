@@ -124,7 +124,6 @@ jobs:
             -   name: Download build dependencies
                 run: |
                     [ -e build/bin/phpstan ] || curl -Ls https://github.com/phpstan/phpstan/releases/download/0.11.19/phpstan.phar -o build/bin/phpstan
-                    [ -e build/bin/php-cs-fixer ] || curl -Ls https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -o build/bin/php-cs-fixer
                     [ -e build/bin/security-checker ] || curl -Ls https://get.sensiolabs.org/security-checker.phar -o build/bin/security-checker
 
             -   name: PHPStan
@@ -133,8 +132,8 @@ jobs:
             -   name: psalm
                 run: php vendor/bin/psalm.phar --show-info=true
 
-            -   name: PHP-CS-Fixer
-                run: php build/bin/php-cs-fixer fix --diff --ansi --dry-run
+            -   name: ECS
+                run: php vendor/bin/ecs check --ansi
 
             -   name: Security check
                 run: php build/bin/security-checker security:check
