@@ -18,11 +18,16 @@ use iCom\SolrClient\Query\Command;
 
 /**
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#adding-documents
+ *
+ * @psalm-immutable
  */
 final class Add implements Command
 {
     use JsonHelper;
 
+    /**
+     * @psalm-var array{commitWithin: ?int, doc: ?array, overwrite: ?bool}
+     */
     private $options = [
         'doc' => null,
         'commitWithin' => null,
@@ -34,6 +39,9 @@ final class Add implements Command
         $this->options['doc'] = $document;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function create(array $document): self
     {
         return new self($document);

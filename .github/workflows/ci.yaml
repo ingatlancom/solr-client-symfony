@@ -130,6 +130,9 @@ jobs:
             -   name: PHPStan
                 run: php build/bin/phpstan analyse --no-progress --ansi
 
+            -   name: psalm
+                run: php vendor/bin/psalm.phar --show-info=true
+
             -   name: PHP-CS-Fixer
                 run: php build/bin/php-cs-fixer fix --diff --ansi --dry-run
 

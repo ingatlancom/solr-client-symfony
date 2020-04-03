@@ -39,7 +39,7 @@ final class SymfonyClient implements Client
     }
 
     /**
-     * @param JsonQuery|string|null $body
+     * @param mixed $body
      */
     private function send(string $method, string $url, $body = null): array
     {
@@ -61,7 +61,7 @@ final class SymfonyClient implements Client
     }
 
     /**
-     * @param JsonQuery|string $body
+     * @param mixed $body
      */
     private function getBody($body): string
     {
@@ -69,7 +69,7 @@ final class SymfonyClient implements Client
             return $body->toJson();
         }
 
-        if (!\is_string($body) || '{' !== $body[0]) {
+        if (!is_string($body) || '{' !== $body[0]) {
             throw new \InvalidArgumentException(sprintf('Client can accept only string or "%s", but "%s" given.', JsonQuery::class, \get_debug_type($body)));
         }
 

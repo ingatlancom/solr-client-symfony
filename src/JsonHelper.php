@@ -17,11 +17,17 @@ use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 
 /**
  * @internal
+ *
+ * @psalm-immutable
  */
 trait JsonHelper
 {
     /**
+     * @param mixed $value
+     *
      * @throws InvalidArgumentException When the value cannot be json-encoded.
+     *
+     * @psalm-pure
      */
     private static function jsonEncode($value, int $flags = null, int $maxDepth = 512): string
     {
