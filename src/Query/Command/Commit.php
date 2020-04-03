@@ -18,16 +18,24 @@ use iCom\SolrClient\Query\Command;
 
 /**
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#commit-and-optimize-during-updates
+ *
+ * @psalm-immutable
  */
 final class Commit implements Command
 {
     use JsonHelper;
 
+    /**
+     * @psalm-var array{waitSearcher: ?bool, expungeDeletes: ?bool}
+     */
     private $options = [
         'waitSearcher' => null,
         'expungeDeletes' => null,
     ];
 
+    /**
+     * @psalm-pure
+     */
     public static function create(): self
     {
         return new self();

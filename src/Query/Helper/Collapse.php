@@ -15,8 +15,23 @@ namespace iCom\SolrClient\Query\Helper;
 
 use iCom\SolrClient\Query\QueryHelper;
 
+/**
+ * @psalm-immutable
+ */
 final class Collapse implements QueryHelper
 {
+    /**
+     * @psalm-var array{
+     *      cache: null|'true'|'false',
+     *      field: ?string,
+     *      hint: ?string,
+     *      max: ?string,
+     *      min: ?string,
+     *      nullPolicy: ?string,
+     *      size: ?int,
+     *      sort: ?string,
+     * }
+     */
     private $params = [
         'field' => null,
         'min' => null,

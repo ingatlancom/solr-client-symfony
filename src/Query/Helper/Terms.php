@@ -23,9 +23,19 @@ use iCom\SolrClient\Query\QueryHelper;
  * query since the default implementation method avoids scoring.
  *
  * @see https://lucene.apache.org/solr/guide/8_4/other-parsers.html#term-query-parser
+ *
+ * @psalm-immutable
  */
 final class Terms implements QueryHelper
 {
+    /**
+     * @psalm-var array{
+     *      cache: null|'true'|'false',
+     *      f: ?string,
+     *      method: ?string,
+     *      separator: ?string,
+     * }
+     */
     private $params = [
         'f' => null,
         'method' => null,
@@ -33,6 +43,7 @@ final class Terms implements QueryHelper
         'cache' => null,
     ];
 
+    /** @psalm-var non-empty-array<array-key, mixed> */
     private $values;
 
     public function __construct(string $field, array $values)

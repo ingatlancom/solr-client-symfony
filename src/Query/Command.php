@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace iCom\SolrClient\Query;
 
+/**
+ * @psalm-immutable
+ */
 interface Command
 {
     /**

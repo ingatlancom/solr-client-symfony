@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="3.10.1@eeed5ecccc10131397f0eb7ee6da810c0be3a7fc">
+  <file src="src/JsonHelper.php">
+    <ImpureFunctionCall occurrences="2">
+      <code>json_last_error</code>
+      <code>json_last_error_msg</code>
+    </ImpureFunctionCall>
+  </file>
+  <file src="src/Query/Helper/Terms.php">
+    <MixedArgument occurrences="1">
+      <code>$separator ?? ','</code>
+    </MixedArgument>
+  </file>
+  <file src="src/Query/SelectQuery.php">
+    <ImpureFunctionCall occurrences="2">
+      <code>\get_debug_type</code>
+      <code>\get_debug_type</code>
+    </ImpureFunctionCall>
+  </file>
+</files>

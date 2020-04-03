@@ -19,13 +19,22 @@ use iCom\SolrClient\Query\SelectQuery;
 
 /**
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#delete-operations
+ *
+ * @psalm-immutable
+ * @psalm-suppress MissingConstructor
  */
 final class Delete implements Command
 {
     use JsonHelper;
 
+    /**
+     * @var array|SelectQuery
+     */
     private $value;
 
+    /**
+     * @psalm-pure
+     */
     public static function fromIds(array $ids): self
     {
         $delete = new self();
@@ -34,6 +43,9 @@ final class Delete implements Command
         return $delete;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function fromQuery(SelectQuery $query): self
     {
         $delete = new self();

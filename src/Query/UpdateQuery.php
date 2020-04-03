@@ -25,12 +25,20 @@ use iCom\SolrClient\Query\Command\Optimize;
  * Note that: Solr has his own JSON syntax which allows to have multiple keys (multiple commands).
  *
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#sending-json-update-commands
+ *
+ * @psalm-immutable
  */
 final class UpdateQuery implements JsonQuery
 {
-    /** @var array|iterable|Command[] */
+    /**
+     * @var Command[]
+     * @psaml-var list<Command>
+     */
     private $commands = [];
 
+    /**
+     * @psalm-param list<Command> $commands
+     */
     public function __construct(iterable $commands = [])
     {
         $this->commands = (static function (Command ...$commands) {
@@ -38,7 +46,10 @@ final class UpdateQuery implements JsonQuery
         })(...$commands);
     }
 
-    public static function create(array $commands = []): self
+    /**
+     * @psalm-param list<Command> $commands
+     */
+    public static function create(iterable $commands = []): self
     {
         return new self($commands);
     }

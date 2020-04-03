@@ -16,12 +16,18 @@ namespace iCom\SolrClient\Query;
 use iCom\SolrClient\JsonHelper;
 use iCom\SolrClient\JsonQuery;
 
+/**
+ * @psalm-immutable
+ */
 final class SelectQuery implements JsonQuery
 {
     use JsonHelper;
 
-    // to keep key order consistent
+    /**
+     * @var array<string, string>
+     */
     private $types = [
+        // to keep key order consistent
         'query' => 'string',
         'filter' => 'array',
         'fields' => 'array',
@@ -31,8 +37,24 @@ final class SelectQuery implements JsonQuery
         'limit' => 'int',
         'params' => 'array',
     ];
+
+    /**
+     * @psalm-var array{
+     *      query?: string,
+     *      filter?: array,
+     *      fields?: array,
+     *      facet?: array,
+     *      sort?: string,
+     *      offset?: int,
+     *      limit?: int,
+     *      params?: array,
+     * }
+     */
     private $body;
 
+    /**
+     * @param array<string, string|array|int> $body
+     */
     public function __construct(array $body = [])
     {
         if ($invalid = array_diff_key($body, $this->types)) {
@@ -45,9 +67,13 @@ final class SelectQuery implements JsonQuery
             }
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->body = array_replace(array_fill_keys(array_keys($this->types), null), $body);
     }
 
+    /**
+     * @param array<string, string> $body
+     */
     public static function create(array $body = []): self
     {
         return new self($body);
@@ -69,6 +95,9 @@ final class SelectQuery implements JsonQuery
         return $q;
     }
 
+    /**
+     * @param mixed $filter
+     */
     public function withFilter($filter): self
     {
         $q = clone $this;
@@ -130,6 +159,9 @@ final class SelectQuery implements JsonQuery
         return self::jsonEncode(new \ArrayObject(array_filter($this->body)), \JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * @param mixed $filter
+     */
     private function parseFilter($filter): string
     {
         if ($filter instanceof QueryHelper) {
