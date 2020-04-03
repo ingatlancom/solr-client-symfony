@@ -10,6 +10,7 @@
         "symfony/polyfill-php80": "^1.15"
     },
     "require-dev": {
+        "phpro/grumphp-shim": "^0.18.0",
         "phpunit/phpunit": "^8.5",
         "psalm/phar": "^3.10",
         "symfony/http-client": "^4.3|^5.0",

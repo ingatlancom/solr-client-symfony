@@ -1,0 +1,7 @@
+parameters:
+    ascii: ~
+    tasks:
+        ecs: ~
+        psalm: ~
+        phpunit: ~
+        composer: ~
