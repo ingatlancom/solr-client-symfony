@@ -33,9 +33,9 @@ final class UpdateQuery implements JsonQuery
 
     public function __construct(iterable $commands = [])
     {
-        foreach ($commands as $command) {
-            $this->addCommand($command);
-        }
+        $this->commands = (static function (Command ...$commands) {
+            return $commands;
+        })(...$commands);
     }
 
     public static function create(array $commands = []): self
@@ -55,9 +55,7 @@ final class UpdateQuery implements JsonQuery
             $add = $add->commitWithin($commitWithin);
         }
 
-        $this->addCommand($add);
-
-        return $this;
+        return $this->withCommand($add);
     }
 
     public function commit(?bool $waitSearcher = null, ?bool $expungeDeletes = null): self
@@ -72,9 +70,7 @@ final class UpdateQuery implements JsonQuery
             $commit = $expungeDeletes ? $commit->enableExpungeDeletes() : $commit->disableExpungeDeletes();
         }
 
-        $this->addCommand($commit);
-
-        return $this;
+        return $this->withCommand($commit);
     }
 
     public function optimize(?bool $waitSearcher = null, ?int $maxSegments = null): self
@@ -89,23 +85,17 @@ final class UpdateQuery implements JsonQuery
             $optimize = $optimize->maxSegments($maxSegments);
         }
 
-        $this->addCommand($optimize);
-
-        return $this;
+        return $this->withCommand($optimize);
     }
 
     public function deleteByIds(array $ids): self
     {
-        $this->addCommand(Delete::fromIds($ids));
-
-        return $this;
+        return $this->withCommand(Delete::fromIds($ids));
     }
 
     public function deleteByQuery(SelectQuery $query): self
     {
-        $this->addCommand(Delete::fromQuery($query));
-
-        return $this;
+        return $this->withCommand(Delete::fromQuery($query));
     }
 
     public function toJson(): string
@@ -118,8 +108,11 @@ final class UpdateQuery implements JsonQuery
         return sprintf('{%s}', implode(',', $commands));
     }
 
-    private function addCommand(Command $command): void
+    private function withCommand(Command $command): self
     {
-        $this->commands[] = $command;
+        $self = clone $this;
+        $self->commands[] = $command;
+
+        return $self;
     }
 }
