@@ -2,7 +2,9 @@ parameters:
     ascii: ~
     tasks:
         ecs: ~
-        psalm: ~
+        psalm:
+            ignore_patterns:
+                - 'tests/'
         phpstan: ~
         phpunit: ~
         composer: ~
