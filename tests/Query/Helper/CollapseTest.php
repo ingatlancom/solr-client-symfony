@@ -108,6 +108,9 @@ final class CollapseTest extends TestCase
 
         $new = $collapse->cache(false);
         self::assertSame('{!collapse field=id cache=false}', $new->toString());
+
+        $new = $collapse->cache(true, 10);
+        self::assertSame('{!collapse field=id cache=true cost=10}', $new->toString());
     }
 
     /**
