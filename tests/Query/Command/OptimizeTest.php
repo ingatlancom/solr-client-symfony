@@ -26,7 +26,7 @@ final class OptimizeTest extends TestCase
     {
         $optimize = Optimize::create();
 
-        $this->assertEquals('{}', $optimize->toJson());
+        self::assertEquals('{}', $optimize->toJson());
     }
 
     /** @test */
@@ -34,7 +34,7 @@ final class OptimizeTest extends TestCase
     {
         $optimize = new Optimize();
 
-        $this->assertEquals('optimize', $optimize->getName());
+        self::assertEquals('optimize', $optimize->getName());
     }
 
     /** @test */
@@ -44,13 +44,13 @@ final class OptimizeTest extends TestCase
 
         $new = $optimize->enableWaitSearcher();
 
-        $this->assertNotSame($optimize, $new);
-        $this->assertEquals('{"waitSearcher":true}', $new->toJson());
+        self::assertNotSame($optimize, $new);
+        self::assertEquals('{"waitSearcher":true}', $new->toJson());
 
         $new = $optimize->disableWaitSearcher();
 
-        $this->assertNotSame($optimize, $new);
-        $this->assertEquals('{"waitSearcher":false}', $new->toJson());
+        self::assertNotSame($optimize, $new);
+        self::assertEquals('{"waitSearcher":false}', $new->toJson());
     }
 
     /** @test */
@@ -60,7 +60,7 @@ final class OptimizeTest extends TestCase
 
         $new = $optimize->maxSegments(1024);
 
-        $this->assertNotSame($optimize, $new);
-        $this->assertEquals('{"maxSegments":1024}', $new->toJson());
+        self::assertNotSame($optimize, $new);
+        self::assertEquals('{"maxSegments":1024}', $new->toJson());
     }
 }

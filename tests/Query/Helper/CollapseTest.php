@@ -34,7 +34,7 @@ final class CollapseTest extends TestCase
     {
         $collapse = Collapse::create('id');
 
-        $this->assertSame('{!collapse field=id}', $collapse->toString());
+        self::assertSame('{!collapse field=id}', $collapse->toString());
     }
 
     /** @test */
@@ -43,8 +43,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->min('field_name');
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id min=field_name}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id min=field_name}', $new->toString());
     }
 
     /** @test */
@@ -53,8 +53,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->max('field_name');
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id max=field_name}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id max=field_name}', $new->toString());
     }
 
     /** @test */
@@ -63,8 +63,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->sort(['field_name desc', 'id desc']);
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame("{!collapse field=id sort='field_name desc,id desc'}", $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame("{!collapse field=id sort='field_name desc,id desc'}", $new->toString());
     }
 
     /** @test */
@@ -73,8 +73,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->nullPolicy('ignore');
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id nullPolicy=ignore}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id nullPolicy=ignore}', $new->toString());
     }
 
     /** @test */
@@ -83,8 +83,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->hint();
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id hint=top_fc}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id hint=top_fc}', $new->toString());
     }
 
     /** @test */
@@ -93,8 +93,8 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->size(50000);
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id size=50000}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id size=50000}', $new->toString());
     }
 
     /** @test */
@@ -103,11 +103,11 @@ final class CollapseTest extends TestCase
         $collapse = Collapse::create('id');
         $new = $collapse->cache(true);
 
-        $this->assertNotSame($new, $collapse);
-        $this->assertSame('{!collapse field=id cache=true}', $new->toString());
+        self::assertNotSame($new, $collapse);
+        self::assertSame('{!collapse field=id cache=true}', $new->toString());
 
         $new = $collapse->cache(false);
-        $this->assertSame('{!collapse field=id cache=false}', $new->toString());
+        self::assertSame('{!collapse field=id cache=false}', $new->toString());
     }
 
     /**
@@ -121,6 +121,9 @@ final class CollapseTest extends TestCase
         $multiSort();
     }
 
+    /**
+     * @return iterable<string, array>
+     */
     public function multipleSortProvider(): iterable
     {
         yield 'min with sort' => [static function (): Collapse {

@@ -26,7 +26,7 @@ final class AddTest extends TestCase
     {
         $add = Add::create(['id' => 1]);
 
-        $this->assertEquals('add', $add->getName());
+        self::assertEquals('add', $add->getName());
     }
 
     /** @test */
@@ -34,12 +34,12 @@ final class AddTest extends TestCase
     {
         $add = Add::create(['id' => 1]);
 
-        $this->assertSame('{"doc":{"id":1}}', $add->toJson());
+        self::assertSame('{"doc":{"id":1}}', $add->toJson());
 
         $new = $add->commitWithin(500);
 
-        $this->assertNotSame($add, $new);
-        $this->assertSame('{"doc":{"id":1},"commitWithin":500}', $new->toJson());
+        self::assertNotSame($add, $new);
+        self::assertSame('{"doc":{"id":1},"commitWithin":500}', $new->toJson());
     }
 
     /** @test */
@@ -47,16 +47,16 @@ final class AddTest extends TestCase
     {
         $add = new Add(['id' => 1]);
 
-        $this->assertSame('{"doc":{"id":1}}', $add->toJson());
+        self::assertSame('{"doc":{"id":1}}', $add->toJson());
 
         $new = $add->enableOverWrite();
 
-        $this->assertNotSame($add, $new);
-        $this->assertSame('{"doc":{"id":1},"overwrite":true}', $new->toJson());
+        self::assertNotSame($add, $new);
+        self::assertSame('{"doc":{"id":1},"overwrite":true}', $new->toJson());
 
         $new = $add->disableOverWrite();
 
-        $this->assertNotSame($add, $new);
-        $this->assertSame('{"doc":{"id":1},"overwrite":false}', $new->toJson());
+        self::assertNotSame($add, $new);
+        self::assertSame('{"doc":{"id":1},"overwrite":false}', $new->toJson());
     }
 }

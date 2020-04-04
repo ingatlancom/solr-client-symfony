@@ -73,7 +73,7 @@ final class Add implements Command
 
     public function toJson(): string
     {
-        return self::jsonEncode(array_filter($this->options, static function ($option) { return null !== $option; }));
+        return self::jsonEncode(array_filter($this->options, static function ($option): bool { return null !== $option; }));
     }
 
     public function getName(): string
