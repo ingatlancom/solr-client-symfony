@@ -70,8 +70,10 @@ final class TermsTest extends TestCase
         self::assertSame('{!terms f=id cache=true}1,2,3', $new->toString());
 
         $new = $terms->cache(false);
-
         self::assertSame('{!terms f=id cache=false}1,2,3', $new->toString());
+
+        $new = $terms->cache(true, 10);
+        self::assertSame('{!terms f=id cache=true cost=10}1,2,3', $new->toString());
     }
 
     /** @test */

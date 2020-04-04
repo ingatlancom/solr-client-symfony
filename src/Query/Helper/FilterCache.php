@@ -23,10 +23,16 @@ trait FilterCache
      */
     private $cache;
 
-    public function cache(bool $cache): self
+    /**
+     * @var ?int
+     */
+    private $cost;
+
+    public function cache(bool $cache, ?int $cost = null): self
     {
         $self = clone $this;
         $self->cache = $cache;
+        $self->cost = $cost;
 
         return $self;
     }
@@ -35,6 +41,7 @@ trait FilterCache
     {
         return [
             'cache' => null !== $this->cache ? var_export($this->cache, true) : null,
+            'cost' => $this->cost,
         ];
     }
 }
