@@ -28,6 +28,8 @@ use iCom\SolrClient\Query\QueryHelper;
  */
 final class Terms implements QueryHelper
 {
+    use FilterCache;
+
     /**
      * @var string
      */
@@ -42,11 +44,6 @@ final class Terms implements QueryHelper
      * @var ?string
      */
     private $separator;
-
-    /**
-     * @var ?bool
-     */
-    private $cache;
 
     /**
      * @psalm-var non-empty-array<array-key, mixed>
@@ -98,22 +95,13 @@ final class Terms implements QueryHelper
         return $terms;
     }
 
-    public function cache(bool $cache): self
-    {
-        $terms = clone $this;
-        $terms->cache = $cache;
-
-        return $terms;
-    }
-
     public function toString(): string
     {
         $params = [
             'f' => $this->f,
             'method' => $this->method,
             'separator' => null,
-            'cache' => null !== $this->cache ? var_export($this->cache, true) : null,
-        ];
+        ] + $this->getCacheFields();
 
         if (null !== $this->separator) {
             $params['separator'] = sprintf('"%s"', addslashes($this->separator));

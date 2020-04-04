@@ -20,6 +20,8 @@ use iCom\SolrClient\Query\QueryHelper;
  */
 final class Collapse implements QueryHelper
 {
+    use FilterCache;
+
     /**
      * @var string
      */
@@ -54,11 +56,6 @@ final class Collapse implements QueryHelper
      * @var ?int
      */
     private $size;
-
-    /**
-     * @var ?bool
-     */
-    private $cache;
 
     public function __construct(string $field)
     {
@@ -131,14 +128,6 @@ final class Collapse implements QueryHelper
         return $collapse;
     }
 
-    public function cache(bool $cache): self
-    {
-        $collapse = clone $this;
-        $collapse->cache = $cache;
-
-        return $collapse;
-    }
-
     public function toString(): string
     {
         $params = [
@@ -149,8 +138,7 @@ final class Collapse implements QueryHelper
             'nullPolicy' => $this->nullPolicy,
             'hint' => $this->hint,
             'size' => $this->size,
-            'cache' => null !== $this->cache ? var_export($this->cache, true) : null,
-        ];
+        ] + $this->getCacheFields();
 
         return sprintf('{!collapse %s}', urldecode(http_build_query($params, '', ' ')));
     }
