@@ -6,11 +6,6 @@
       <code>json_last_error_msg</code>
     </ImpureFunctionCall>
   </file>
-  <file src="src/Query/Helper/Terms.php">
-    <MixedArgument occurrences="1">
-      <code>$separator ?? ','</code>
-    </MixedArgument>
-  </file>
   <file src="src/Query/SelectQuery.php">
     <ImpureFunctionCall occurrences="2">
       <code>\get_debug_type</code>
