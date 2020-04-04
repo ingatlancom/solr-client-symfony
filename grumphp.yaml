@@ -3,5 +3,6 @@ parameters:
     tasks:
         ecs: ~
         psalm: ~
+        phpstan: ~
         phpunit: ~
         composer: ~
