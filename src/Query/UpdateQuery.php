@@ -41,7 +41,7 @@ final class UpdateQuery implements JsonQuery
      */
     public function __construct(iterable $commands = [])
     {
-        $this->commands = (static function (Command ...$commands) {
+        $this->commands = (static function (Command ...$commands): array {
             return $commands;
         })(...$commands);
     }

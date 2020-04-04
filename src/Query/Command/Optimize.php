@@ -67,7 +67,7 @@ final class Optimize implements Command
 
     public function toJson(): string
     {
-        return self::jsonEncode(array_filter($this->options, static function ($option) { return null !== $option; }), JSON_FORCE_OBJECT);
+        return self::jsonEncode(array_filter($this->options, static function ($option): bool { return null !== $option; }), JSON_FORCE_OBJECT);
     }
 
     public function getName(): string

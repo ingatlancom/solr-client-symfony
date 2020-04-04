@@ -36,14 +36,14 @@ final class SymfonyClientTest extends TestCase
     /** @test */
     public function it_makes_http_request_to_the_select_api(): void
     {
-        $callback = function ($method, $url, $options): MockResponse {
+        $callback = static function ($method, $url, $options): MockResponse {
             $headers = $options['request_headers'] ?? $options['headers'] ?? [];
-            $this->assertSame('GET', $method);
-            $this->assertSame('http://127.0.0.1/select', $url);
-            $this->assertContains('accept: application/json', array_map('strtolower', $headers));
-            $this->assertContains('content-type: application/json', array_map('strtolower', $headers));
-            $this->assertArrayHasKey('body', $options);
-            $this->assertSame('{"query": "*:*"}', $options['body']);
+            self::assertSame('GET', $method);
+            self::assertSame('http://127.0.0.1/select', $url);
+            self::assertContains('accept: application/json', array_map('strtolower', $headers));
+            self::assertContains('content-type: application/json', array_map('strtolower', $headers));
+            self::assertArrayHasKey('body', $options);
+            self::assertSame('{"query": "*:*"}', $options['body']);
 
             return new MockResponse('{"message": "OK"}');
         };
@@ -56,13 +56,13 @@ final class SymfonyClientTest extends TestCase
     /** @test */
     public function it_makes_http_request_to_the_update_api(): void
     {
-        $callback = function ($method, $url, $options): MockResponse {
+        $callback = static function ($method, $url, $options): MockResponse {
             $headers = $options['request_headers'] ?? $options['headers'] ?? [];
-            $this->assertSame('POST', $method);
-            $this->assertSame('http://127.0.0.1/update', $url);
-            $this->assertContains('accept: application/json', array_map('strtolower', $headers));
-            $this->assertArrayHasKey('body', $options);
-            $this->assertSame('{"add":{"doc":{"id":1}}}', $options['body']);
+            self::assertSame('POST', $method);
+            self::assertSame('http://127.0.0.1/update', $url);
+            self::assertContains('accept: application/json', array_map('strtolower', $headers));
+            self::assertArrayHasKey('body', $options);
+            self::assertSame('{"add":{"doc":{"id":1}}}', $options['body']);
 
             return new MockResponse('{"message": "OK"}');
         };
@@ -80,7 +80,7 @@ final class SymfonyClientTest extends TestCase
         $client = new SymfonyClient($httpClient);
         $response = $client->select('{"query": "*:*"}');
 
-        $this->assertEquals(['message' => 'called!'], $response);
+        self::assertEquals(['message' => 'called!'], $response);
     }
 
     /** @test */
@@ -91,7 +91,7 @@ final class SymfonyClientTest extends TestCase
         $client = new SymfonyClient($httpClient);
         $response = $client->select(SelectQuery::create()->query('*:*'));
 
-        $this->assertEquals(['message' => 'called!'], $response);
+        self::assertEquals(['message' => 'called!'], $response);
     }
 
     /** @test */
@@ -113,7 +113,7 @@ final class SymfonyClientTest extends TestCase
     {
         $response = SolrClient::create(['base_uri' => getenv('SOLR_URL')])->select($query());
 
-        $this->assertSame($expected, $response['response']['docs']);
+        self::assertSame($expected, $response['response']['docs']);
     }
 
     /**
@@ -130,20 +130,20 @@ final class SymfonyClientTest extends TestCase
 
         $response = $client->select(SelectQuery::create()->query('id:33'));
 
-        $this->assertEmpty($response['response']['docs']);
+        self::assertEmpty($response['response']['docs']);
 
         $document = ['id' => 33, 'sample_bool' => false, 'sample_int' => 44];
         $client->update(UpdateQuery::create()->add($document)->commit());
 
         $response = $client->select(SelectQuery::create()->query('id:33')->fields(['id']));
 
-        $this->assertSame([['id' => '33']], $response['response']['docs']);
+        self::assertSame([['id' => '33']], $response['response']['docs']);
 
         $client->update($deleteQuery);
 
         $response = $client->select(SelectQuery::create()->query('id:33'));
 
-        $this->assertEmpty($response['response']['docs']);
+        self::assertEmpty($response['response']['docs']);
     }
 
     public function queryProvider(): iterable

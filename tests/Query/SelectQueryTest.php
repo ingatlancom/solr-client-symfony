@@ -31,7 +31,7 @@ final class SelectQueryTest extends TestCase
     {
         $select = new SelectQuery();
 
-        $this->assertSame('{}', $select->toJson());
+        self::assertSame('{}', $select->toJson());
     }
 
     /** @test */
@@ -40,8 +40,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->query('*:*');
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"query":"*:*"}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"query":"*:*"}', $new->toJson());
     }
 
     /** @test */
@@ -50,8 +50,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->filter(['field' => 'value']);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"filter":{"field":"value"}}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"filter":{"field":"value"}}', $new->toJson());
     }
 
     /** @test */
@@ -60,8 +60,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->withFilter('id:1');
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"filter":["id:1"]}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"filter":["id:1"]}', $new->toJson());
     }
 
     /** @test */
@@ -70,8 +70,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->fields(['field1', 'field2']);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"fields":["field1","field2"]}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"fields":["field1","field2"]}', $new->toJson());
     }
 
     /** @test */
@@ -80,8 +80,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->sort('id desc');
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"sort":"id desc"}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"sort":"id desc"}', $new->toJson());
     }
 
     /** @test */
@@ -90,8 +90,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->facet(['categories' => ['type' => 'terms', 'field' => 'cat']]);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"facet":{"categories":{"type":"terms","field":"cat"}}}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"facet":{"categories":{"type":"terms","field":"cat"}}}', $new->toJson());
     }
 
     /** @test */
@@ -100,8 +100,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->params(['debug' => true]);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"params":{"debug":true}}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"params":{"debug":true}}', $new->toJson());
     }
 
     /** @test */
@@ -110,8 +110,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->offset(10);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"offset":10}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"offset":10}', $new->toJson());
     }
 
     /** @test */
@@ -120,8 +120,8 @@ final class SelectQueryTest extends TestCase
         $select = new SelectQuery();
         $new = $select->limit(10);
 
-        $this->assertNotSame($select, $new);
-        $this->assertSame('{"limit":10}', $new->toJson());
+        self::assertNotSame($select, $new);
+        self::assertSame('{"limit":10}', $new->toJson());
     }
 
     /** @test */
@@ -170,7 +170,7 @@ final class SelectQueryTest extends TestCase
             ->limit(1)
         ;
 
-        $this->assertSame($request1->toJson(), $request2->toJson());
+        self::assertSame($request1->toJson(), $request2->toJson());
     }
 
     /** @test */
@@ -198,7 +198,7 @@ final class SelectQueryTest extends TestCase
             ->params($body['params'])
         ;
 
-        $this->assertSame($body, \json_decode($query->toJson(), true));
+        self::assertSame($body, \json_decode($query->toJson(), true));
     }
 
     /** @test */
@@ -206,10 +206,10 @@ final class SelectQueryTest extends TestCase
     {
         $query = new SelectQuery(['query' => '*:*', 'sort' => 'id asc', 'offset' => 3, 'limit' => 10]);
 
-        $this->assertStringNotContainsString('filter', $query->toJson());
-        $this->assertStringNotContainsString('fields', $query->toJson());
-        $this->assertStringNotContainsString('facet', $query->toJson());
-        $this->assertStringNotContainsString('params', $query->toJson());
+        self::assertStringNotContainsString('filter', $query->toJson());
+        self::assertStringNotContainsString('fields', $query->toJson());
+        self::assertStringNotContainsString('facet', $query->toJson());
+        self::assertStringNotContainsString('params', $query->toJson());
     }
 
     /** @test */
@@ -217,9 +217,9 @@ final class SelectQueryTest extends TestCase
     {
         $query = (new SelectQuery())->filter(['id:1'])->withFilter('id:2')->withFilter('id:3');
 
-        $this->assertStringContainsString('id:1', $query->toJson());
-        $this->assertStringContainsString('id:2', $query->toJson());
-        $this->assertStringContainsString('id:3', $query->toJson());
+        self::assertStringContainsString('id:1', $query->toJson());
+        self::assertStringContainsString('id:2', $query->toJson());
+        self::assertStringContainsString('id:3', $query->toJson());
     }
 
     /** @test */
@@ -235,6 +235,6 @@ final class SelectQueryTest extends TestCase
     {
         $query = (new SelectQuery())->filter(['id:1', Collapse::create('collapse_field')])->withFilter(Terms::create('terms_field', [1, 2]));
 
-        $this->assertSame('{"filter":["id:1","{!collapse field=collapse_field}","{!terms f=terms_field}1,2"]}', $query->toJson());
+        self::assertSame('{"filter":["id:1","{!collapse field=collapse_field}","{!terms f=terms_field}1,2"]}', $query->toJson());
     }
 }

@@ -26,7 +26,7 @@ final class CommitTest extends TestCase
     {
         $commit = Commit::create();
 
-        $this->assertSame('{}', $commit->toJson());
+        self::assertSame('{}', $commit->toJson());
     }
 
     /** @test */
@@ -34,7 +34,7 @@ final class CommitTest extends TestCase
     {
         $commit = Commit::create();
 
-        $this->assertEquals('commit', $commit->getName());
+        self::assertEquals('commit', $commit->getName());
     }
 
     /** @test */
@@ -44,13 +44,13 @@ final class CommitTest extends TestCase
 
         $new = $commit->enableExpungeDeletes();
 
-        $this->assertNotSame($commit, $new);
-        $this->assertSame('{"expungeDeletes":true}', $new->toJson());
+        self::assertNotSame($commit, $new);
+        self::assertSame('{"expungeDeletes":true}', $new->toJson());
 
         $new = $commit->disableExpungeDeletes();
 
-        $this->assertNotSame($commit, $new);
-        $this->assertSame('{"expungeDeletes":false}', $new->toJson());
+        self::assertNotSame($commit, $new);
+        self::assertSame('{"expungeDeletes":false}', $new->toJson());
     }
 
     /** @test */
@@ -60,12 +60,12 @@ final class CommitTest extends TestCase
 
         $new = $commit->enableWaitSearcher();
 
-        $this->assertNotSame($commit, $new);
-        $this->assertSame('{"waitSearcher":true}', $new->toJson());
+        self::assertNotSame($commit, $new);
+        self::assertSame('{"waitSearcher":true}', $new->toJson());
 
         $new = $commit->disableWaitSearcher();
 
-        $this->assertNotSame($commit, $new);
-        $this->assertSame('{"waitSearcher":false}', $new->toJson());
+        self::assertNotSame($commit, $new);
+        self::assertSame('{"waitSearcher":false}', $new->toJson());
     }
 }

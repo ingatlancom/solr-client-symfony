@@ -47,7 +47,8 @@ final class SymfonyClient implements Client
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ]];
-        if ($body) {
+
+        if (null !== $body) {
             $options['body'] = $this->getBody($body);
         }
 

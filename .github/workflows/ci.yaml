@@ -3,6 +3,7 @@ on: [push, pull_request]
 jobs:
     tests:
         runs-on: ubuntu-18.04
+        timeout-minutes: 5
         strategy:
             fail-fast: false
             matrix:
@@ -82,6 +83,7 @@ jobs:
 
     code-analysis:
         runs-on: ubuntu-18.04
+        timeout-minutes: 5
         strategy:
             fail-fast: false
         steps:
@@ -127,18 +129,23 @@ jobs:
 
             -   name: PHPStan
                 run: php vendor/bin/phpstan analyse --no-progress --ansi
+                if: success() || failure()
 
             -   name: psalm
                 run: php vendor/bin/psalm.phar --show-info=true
+                if: success() || failure()
 
             -   name: ECS
                 run: php vendor/bin/ecs check --ansi
+                if: success() || failure()
 
             -   name: Security check
                 run: php build/bin/security-checker security:check
+                if: success() || failure()
 
     integration-tests:
         runs-on: ubuntu-18.04
+        timeout-minutes: 5
         steps:
             -   uses: actions/checkout@v2
 

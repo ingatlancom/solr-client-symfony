@@ -39,22 +39,22 @@ final class UpdateQueryTest extends TestCase
             ->deleteByQuery(SelectQuery::create()->query('id:"1"'))
         ;
 
-        $this->assertSame('{"add":{"doc":{"id":1}},"add":{"doc":{"id":2},"commitWithin":1000,"overwrite":false},"add":{"doc":{"id":3},"commitWithin":500},"delete":["1","2","3"],"delete":{"query":"id:\"1\""}}', $commands->toJson());
+        self::assertSame('{"add":{"doc":{"id":1}},"add":{"doc":{"id":2},"commitWithin":1000,"overwrite":false},"add":{"doc":{"id":3},"commitWithin":500},"delete":["1","2","3"],"delete":{"query":"id:\"1\""}}', $commands->toJson());
     }
 
     /** @test */
     public function it_can_add_a_commit_command(): void
     {
-        $this->assertSame('{"commit":{}}', UpdateQuery::create()->commit()->toJson());
-        $this->assertSame('{"commit":{"waitSearcher":true}}', UpdateQuery::create()->commit(true)->toJson());
-        $this->assertSame('{"commit":{"expungeDeletes":true}}', UpdateQuery::create()->commit(null, true)->toJson());
+        self::assertSame('{"commit":{}}', UpdateQuery::create()->commit()->toJson());
+        self::assertSame('{"commit":{"waitSearcher":true}}', UpdateQuery::create()->commit(true)->toJson());
+        self::assertSame('{"commit":{"expungeDeletes":true}}', UpdateQuery::create()->commit(null, true)->toJson());
     }
 
     /** @test */
     public function it_can_add_an_optimize_command(): void
     {
-        $this->assertSame('{"optimize":{}}', UpdateQuery::create()->optimize()->toJson());
-        $this->assertSame('{"optimize":{"waitSearcher":true}}', UpdateQuery::create()->optimize(true)->toJson());
-        $this->assertSame('{"optimize":{"maxSegments":1}}', UpdateQuery::create()->optimize(null, 1)->toJson());
+        self::assertSame('{"optimize":{}}', UpdateQuery::create()->optimize()->toJson());
+        self::assertSame('{"optimize":{"waitSearcher":true}}', UpdateQuery::create()->optimize(true)->toJson());
+        self::assertSame('{"optimize":{"maxSegments":1}}', UpdateQuery::create()->optimize(null, 1)->toJson());
     }
 }

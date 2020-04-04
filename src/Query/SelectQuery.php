@@ -53,11 +53,11 @@ final class SelectQuery implements JsonQuery
     private $body;
 
     /**
-     * @param array<string, string|array|int> $body
+     * @psalm-param array<string, string|array|int> $body
      */
     public function __construct(array $body = [])
     {
-        if ($invalid = array_diff_key($body, $this->types)) {
+        if ([] !== $invalid = array_diff_key($body, $this->types)) {
             throw new \InvalidArgumentException(sprintf('Invalid keys "%s" found. Valid keys are "%s".', implode(', ', array_keys($invalid)), implode(', ', array_keys($this->types))));
         }
 
@@ -72,7 +72,7 @@ final class SelectQuery implements JsonQuery
     }
 
     /**
-     * @param array<string, string> $body
+     * @psalm-param array<string, string|array|int> $body
      */
     public static function create(array $body = []): self
     {

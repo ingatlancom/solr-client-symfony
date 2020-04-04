@@ -56,8 +56,8 @@ final class TermsTest extends TestCase
         $terms = Terms::create('id', [1, 2, 3]);
         $new = $terms->method('termsFilter');
 
-        $this->assertNotSame($terms, $new);
-        $this->assertSame('{!terms f=id method=termsFilter}1,2,3', $new->toString());
+        self::assertNotSame($terms, $new);
+        self::assertSame('{!terms f=id method=termsFilter}1,2,3', $new->toString());
     }
 
     /** @test */
@@ -66,12 +66,12 @@ final class TermsTest extends TestCase
         $terms = Terms::create('id', [1, 2, 3]);
         $new = $terms->cache(true);
 
-        $this->assertNotSame($terms, $new);
-        $this->assertSame('{!terms f=id cache=true}1,2,3', $new->toString());
+        self::assertNotSame($terms, $new);
+        self::assertSame('{!terms f=id cache=true}1,2,3', $new->toString());
 
         $new = $terms->cache(false);
 
-        $this->assertSame('{!terms f=id cache=false}1,2,3', $new->toString());
+        self::assertSame('{!terms f=id cache=false}1,2,3', $new->toString());
     }
 
     /** @test */
@@ -79,7 +79,7 @@ final class TermsTest extends TestCase
     {
         $terms = Terms::create('other_id', [1, 2, 3])->method('termsFilter')->separator(' ')->cache(false);
 
-        $this->assertSame('{!terms f=other_id method=termsFilter separator=" " cache=false}1 2 3', $terms->toString());
+        self::assertSame('{!terms f=other_id method=termsFilter separator=" " cache=false}1 2 3', $terms->toString());
     }
 
     /** @test */
@@ -87,7 +87,7 @@ final class TermsTest extends TestCase
     {
         $terms = Terms::create('id', [1, 2, 3]);
 
-        $this->assertSame('{!terms f=id}1,2,3', $terms->toString());
+        self::assertSame('{!terms f=id}1,2,3', $terms->toString());
     }
 
     /** @test */
@@ -96,18 +96,26 @@ final class TermsTest extends TestCase
         $terms = Terms::create('id', [1, 2, 3]);
         $new = $terms->separator(' ');
 
-        $this->assertNotSame($terms, $new);
-        $this->assertSame('{!terms f=id separator=" "}1 2 3', $new->toString());
+        self::assertNotSame($terms, $new);
+        self::assertSame('{!terms f=id separator=" "}1 2 3', $new->toString());
     }
 
-    /** @test @dataProvider escapes */
+    /**
+     * @param array<int> $values
+     *
+     * @test
+     * @dataProvider escapes
+     */
     public function it_escapes_the_term_separator_correctly(array $values, string $separator, string $expected): void
     {
         $terms = Terms::create('id', $values)->separator($separator);
 
-        $this->assertSame($expected, $terms->toString());
+        self::assertSame($expected, $terms->toString());
     }
 
+    /**
+     * @return iterable<string, array>
+     */
     public function escapes(): iterable
     {
         yield 'double quote' => [[1, 2, 3], '"', '{!terms f=id separator="\""}1"2"3'];

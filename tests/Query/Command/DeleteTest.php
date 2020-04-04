@@ -30,8 +30,8 @@ final class DeleteTest extends TestCase
         $deleteByIds = Delete::fromIds([1, 2, 3]);
         $deleteByQuery = Delete::fromQuery(SelectQuery::create()->query('id:1'));
 
-        $this->assertSame('[1,2,3]', $deleteByIds->toJson());
-        $this->assertSame('{"query":"id:1"}', $deleteByQuery->toJson());
+        self::assertSame('[1,2,3]', $deleteByIds->toJson());
+        self::assertSame('{"query":"id:1"}', $deleteByQuery->toJson());
     }
 
     /** @test */
@@ -39,6 +39,6 @@ final class DeleteTest extends TestCase
     {
         $delete = Delete::fromIds([1, 2, 3]);
 
-        $this->assertSame('delete', $delete->getName());
+        self::assertSame('delete', $delete->getName());
     }
 }
