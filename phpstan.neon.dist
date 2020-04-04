@@ -1,5 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
 parameters:
-    level: 7
+    level: 8
+    checkMissingIterableValueType: false
+    inferPrivatePropertyTypeFromConstructor: true
     paths:
         - src
         - tests
