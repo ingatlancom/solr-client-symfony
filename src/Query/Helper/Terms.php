@@ -29,23 +29,33 @@ use iCom\SolrClient\Query\QueryHelper;
 final class Terms implements QueryHelper
 {
     /**
-     * @psalm-var array{
-     *      cache: null|'true'|'false',
-     *      f: ?string,
-     *      method: ?string,
-     *      separator: ?string,
-     * }
+     * @var string
      */
-    private $params = [
-        'f' => null,
-        'method' => null,
-        'separator' => null,
-        'cache' => null,
-    ];
+    private $f;
 
-    /** @psalm-var non-empty-array<array-key, mixed> */
+    /**
+     * @var ?string
+     */
+    private $method;
+
+    /**
+     * @var ?string
+     */
+    private $separator;
+
+    /**
+     * @var ?bool
+     */
+    private $cache;
+
+    /**
+     * @psalm-var non-empty-array<array-key, mixed>
+     */
     private $values;
 
+    /**
+     * @param array<mixed> $values
+     */
     public function __construct(string $field, array $values)
     {
         if ('' === $field) {
@@ -56,10 +66,13 @@ final class Terms implements QueryHelper
             throw new \InvalidArgumentException('The "values" parameter can not be empty.');
         }
 
-        $this->params['f'] = $field;
+        $this->f = $field;
         $this->values = $values;
     }
 
+    /**
+     * @param array<mixed> $values
+     */
     public static function create(string $field, array $values): self
     {
         return new self($field, $values);
@@ -68,7 +81,7 @@ final class Terms implements QueryHelper
     public function separator(string $separator): self
     {
         $terms = clone $this;
-        $terms->params['separator'] = $separator;
+        $terms->separator = $separator;
 
         return $terms;
     }
@@ -80,7 +93,7 @@ final class Terms implements QueryHelper
         }
 
         $terms = clone $this;
-        $terms->params['method'] = $method;
+        $terms->method = $method;
 
         return $terms;
     }
@@ -88,19 +101,24 @@ final class Terms implements QueryHelper
     public function cache(bool $cache): self
     {
         $terms = clone $this;
-        $terms->params['cache'] = $cache ? 'true' : 'false';
+        $terms->cache = $cache;
 
         return $terms;
     }
 
     public function toString(): string
     {
-        $params = $this->params;
+        $params = [
+            'f' => $this->f,
+            'method' => $this->method,
+            'separator' => null,
+            'cache' => null !== $this->cache ? var_export($this->cache, true) : null,
+        ];
 
-        if (null !== $params['separator']) {
-            $params['separator'] = sprintf('"%s"', addslashes($separator = $params['separator']));
+        if (null !== $this->separator) {
+            $params['separator'] = sprintf('"%s"', addslashes($this->separator));
         }
 
-        return sprintf('{!terms %s}%s', urldecode(http_build_query($params, '', ' ')), implode($separator ?? ',', $this->values));
+        return sprintf('{!terms %s}%s', urldecode(http_build_query($params, '', ' ')), implode($this->separator ?? ',', $this->values));
     }
 }

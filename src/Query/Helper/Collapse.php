@@ -21,31 +21,48 @@ use iCom\SolrClient\Query\QueryHelper;
 final class Collapse implements QueryHelper
 {
     /**
-     * @psalm-var array{
-     *      cache: null|'true'|'false',
-     *      field: ?string,
-     *      hint: ?string,
-     *      max: ?string,
-     *      min: ?string,
-     *      nullPolicy: ?string,
-     *      size: ?int,
-     *      sort: ?string,
-     * }
+     * @var string
      */
-    private $params = [
-        'field' => null,
-        'min' => null,
-        'max' => null,
-        'sort' => null,
-        'nullPolicy' => null,
-        'hint' => null,
-        'size' => null,
-        'cache' => null,
-    ];
+    private $field;
+
+    /**
+     * @var ?string
+     */
+    private $min;
+
+    /**
+     * @var ?string
+     */
+    private $max;
+
+    /**
+     * @var ?string
+     */
+    private $sort;
+
+    /**
+     * @var ?string
+     */
+    private $nullPolicy;
+
+    /**
+     * @var ?string
+     */
+    private $hint;
+
+    /**
+     * @var ?int
+     */
+    private $size;
+
+    /**
+     * @var ?bool
+     */
+    private $cache;
 
     public function __construct(string $field)
     {
-        $this->params['field'] = $field;
+        $this->field = $field;
     }
 
     public static function create(string $field): self
@@ -58,7 +75,7 @@ final class Collapse implements QueryHelper
         $this->assertSingleSort();
 
         $collapse = clone $this;
-        $collapse->params['min'] = $expression;
+        $collapse->min = $expression;
 
         return $collapse;
     }
@@ -68,17 +85,20 @@ final class Collapse implements QueryHelper
         $this->assertSingleSort();
 
         $collapse = clone $this;
-        $collapse->params['max'] = $expression;
+        $collapse->max = $expression;
 
         return $collapse;
     }
 
+    /**
+     * @param array<string> $sort
+     */
     public function sort(array $sort): self
     {
         $this->assertSingleSort();
 
         $collapse = clone $this;
-        $collapse->params['sort'] = sprintf("'%s'", implode(',', $sort));
+        $collapse->sort = sprintf("'%s'", implode(',', $sort));
 
         return $collapse;
     }
@@ -90,7 +110,7 @@ final class Collapse implements QueryHelper
         }
 
         $collapse = clone $this;
-        $collapse->params['nullPolicy'] = $nullPolicy;
+        $collapse->nullPolicy = $nullPolicy;
 
         return $collapse;
     }
@@ -98,7 +118,7 @@ final class Collapse implements QueryHelper
     public function hint(): self
     {
         $collapse = clone $this;
-        $collapse->params['hint'] = 'top_fc';
+        $collapse->hint = 'top_fc';
 
         return $collapse;
     }
@@ -106,7 +126,7 @@ final class Collapse implements QueryHelper
     public function size(int $size): self
     {
         $collapse = clone $this;
-        $collapse->params['size'] = $size;
+        $collapse->size = $size;
 
         return $collapse;
     }
@@ -114,19 +134,30 @@ final class Collapse implements QueryHelper
     public function cache(bool $cache): self
     {
         $collapse = clone $this;
-        $collapse->params['cache'] = $cache ? 'true' : 'false';
+        $collapse->cache = $cache;
 
         return $collapse;
     }
 
     public function toString(): string
     {
-        return sprintf('{!collapse %s}', urldecode(http_build_query($this->params, '', ' ')));
+        $params = [
+            'field' => $this->field,
+            'min' => $this->min,
+            'max' => $this->max,
+            'sort' => $this->sort,
+            'nullPolicy' => $this->nullPolicy,
+            'hint' => $this->hint,
+            'size' => $this->size,
+            'cache' => null !== $this->cache ? var_export($this->cache, true) : null,
+        ];
+
+        return sprintf('{!collapse %s}', urldecode(http_build_query($params, '', ' ')));
     }
 
     private function assertSingleSort(): void
     {
-        if (null !== $this->params['min'] || null !== $this->params['max'] || null !== $this->params['sort']) {
+        if (null !== $this->min || null !== $this->max || null !== $this->sort) {
             throw new \RuntimeException('Multiple sort is not allowed.');
         }
     }
