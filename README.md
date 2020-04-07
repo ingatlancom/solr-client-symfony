@@ -1,6 +1,10 @@
 # Solr Client
 
-[![pipeline status][0]][1] [![coverage report][2]][3] [![Scrutinizer Code Quality][7]][8] [![Mutation testing badge][9]][10]
+[![pipeline status][0]][1]
+[![coverage report][2]][3]
+[![Scrutinizer Code Quality][7]][8]
+[![Mutation testing badge][9]][10]
+![Psalm coverage][11]
 
 Simple [Solr][4] client using the JSON Request API available since Solr 5.1,
 so this client only usable after that version.
@@ -50,3 +54,4 @@ Please make sure to update tests as appropriate. For details please consult with
 [8]: https://scrutinizer-ci.com/g/ingatlancom/solr-client-symfony/?branch=master
 [9]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fingatlancom%2Fsolr-client-symfony%2Fmaster
 [10]: https://dashboard.stryker-mutator.io/reports/github.com/ingatlancom/solr-client-symfony/master
+[11]: https://shepherd.dev/github/ingatlancom/solr-client-symfony/coverage.svg

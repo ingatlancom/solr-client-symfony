@@ -132,7 +132,7 @@ jobs:
                 if: success() || failure()
 
             -   name: psalm
-                run: php vendor/bin/psalm.phar --show-info=true
+                run: php vendor/bin/psalm.phar --show-info=false --threads=$(nproc) --stats --shepherd --output-format=github
                 if: success() || failure()
 
             -   name: ECS
