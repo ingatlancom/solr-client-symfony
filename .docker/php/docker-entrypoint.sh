@@ -9,7 +9,7 @@ if [ ! -f "$COMPOSER_HOME/keys.dev.pub" ] || [ ! -f "$COMPOSER_HOME/keys.tags.pu
     fi
 
     cp --recursive /tmp/* "$COMPOSER_HOME"
-    composer global require "hirak/prestissimo"
+    composer global require "symfony/flex"
     composer diagnose
 fi
 
