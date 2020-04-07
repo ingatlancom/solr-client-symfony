@@ -146,6 +146,8 @@ jobs:
     integration-tests:
         runs-on: ubuntu-18.04
         timeout-minutes: 5
+        strategy:
+            fail-fast: false
         steps:
             -   uses: actions/checkout@v2
 
