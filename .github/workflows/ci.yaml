@@ -68,6 +68,8 @@ jobs:
 
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
+              env:
+                  INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
               run: |
                   [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.16.1/infection.phar -o build/bin/infection
                   php -dpcov.enabled=1 build/bin/infection --skip-initial-tests --coverage=build/coverage --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --no-progress --show-mutations --ansi
