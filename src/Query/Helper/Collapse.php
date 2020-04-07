@@ -20,7 +20,7 @@ use iCom\SolrClient\Query\QueryHelper;
  */
 final class Collapse implements QueryHelper
 {
-    use FilterCache;
+    use Caching;
 
     /**
      * @var string

@@ -28,7 +28,7 @@ use iCom\SolrClient\Query\QueryHelper;
  */
 final class Terms implements QueryHelper
 {
-    use FilterCache;
+    use Caching;
 
     /**
      * @var string
