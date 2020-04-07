@@ -6,5 +6,6 @@ parameters:
             ignore_patterns:
                 - 'tests/'
         phpstan: ~
-        phpunit: ~
+        phpunit:
+            always_execute: true
         composer: ~
