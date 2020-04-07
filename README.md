@@ -52,6 +52,6 @@ Please make sure to update tests as appropriate. For details please consult with
 [6]: https://choosealicense.com/licenses/mit/
 [7]: https://scrutinizer-ci.com/g/ingatlancom/solr-client-symfony/badges/quality-score.png?b=master
 [8]: https://scrutinizer-ci.com/g/ingatlancom/solr-client-symfony/?branch=master
-[9]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fingatlancom%2Fsolr-client-symfony%2Fmaster
+[9]: https://badge.stryker-mutator.io/github.com/ingatlancom/solr-client-symfony/master?syle=flat
 [10]: https://dashboard.stryker-mutator.io/reports/github.com/ingatlancom/solr-client-symfony/master
 [11]: https://shepherd.dev/github/ingatlancom/solr-client-symfony/coverage.svg
