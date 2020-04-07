@@ -16,7 +16,7 @@ namespace iCom\SolrClient\Query\Helper;
 /**
  * @psalm-immutable
  */
-trait FilterCache
+trait Caching
 {
     /**
      * @var ?bool
