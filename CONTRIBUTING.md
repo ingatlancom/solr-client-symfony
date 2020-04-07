@@ -6,13 +6,13 @@ Solr Client is an open source, community-driven project.
 #### Install dependencies
 
 ```bash
-docker-compose run --rm -u $(id -u):$(id -g) php7 composer install
+docker-compose run --rm -u $(id -u):$(id -g) php composer install
 ```
 
 #### Run unit tests
 
 ```bash
-docker-compose run --rm -u $(id -u):$(id -g) php7 vendor/bin/phpunit
+docker-compose run --rm -u $(id -u):$(id -g) php vendor/bin/phpunit
 ```
 
 #### Run integration tests
@@ -33,5 +33,5 @@ docker-compose exec solr post -c sample data/sample.json
 ```
 Run tests
 ```bash
-docker-compose run --rm -u $(id -u):$(id -g) php7 vendor/bin/phpunit --group=integration
+docker-compose run --rm -u $(id -u):$(id -g) php vendor/bin/phpunit --group=integration
 ```

@@ -7,8 +7,8 @@ RUN apk --no-cache add --virtual .composer-rundeps git subversion openssh mercur
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
 
-RUN apk add --no-cache --virtual .build-deps zlib-dev \
- && docker-php-ext-configure zip --without-libzip # change this to with-libzip for php >=7.3 \
+RUN apk add --no-cache --virtual .build-deps libzip-dev zlib-dev \
+ && docker-php-ext-configure zip \
  && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) zip \
  && runDeps="$( \
     scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \

@@ -16,12 +16,12 @@ x-php-common:
         - $PWD:/app
 
 services:
-    php7:
+    php:
         <<: *php-common
         build:
             context: .docker/php/
             args:
-                PHP_VERSION: '7.3-cli-alpine'
+                PHP_VERSION: '7.4-cli-alpine'
 
     solr:
         image: solr:8.4-slim
