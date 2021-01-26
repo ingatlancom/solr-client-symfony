@@ -14,8 +14,5 @@ parameters:
             message: '#Method iCom\\SolrClient\\[A-Za-z\\_]+::jsonEncode\(\) should return string but returns string\|false\.#'
             path: src/JsonHelper.php
         -
-            message: '~Property iCom\\SolrClient\\Query\\SelectQuery::\$body \(array<string, array\|int\|string>\) does not accept array\.~'
-            path: src/Query/SelectQuery.php
-        -
             message: '~Parameter #1 \$jsonBody of method iCom\\SolrClient\\Client\\SymfonyClient::select\(\) expects .+ given\.~'
             path: tests/Client/SymfonyClientTest.php

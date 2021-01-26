@@ -1,4 +1,6 @@
 parameters:
+    git_hook_variables:
+        EXEC_GRUMPHP_COMMAND: 'docker-compose run --rm --no-deps php'
     ascii: ~
     tasks:
         ecs: ~
