@@ -57,4 +57,10 @@ final class UpdateQueryTest extends TestCase
         self::assertSame('{"optimize":{"waitSearcher":true}}', UpdateQuery::create()->optimize(true)->toJson());
         self::assertSame('{"optimize":{"maxSegments":1}}', UpdateQuery::create()->optimize(null, 1)->toJson());
     }
+
+    /** @test */
+    public function it_converts_rollback_to_json_objects(): void
+    {
+        self::assertSame('{"rollback":{}}', UpdateQuery::create()->rollback()->toJson());
+    }
 }

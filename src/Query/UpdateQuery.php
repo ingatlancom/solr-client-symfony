@@ -18,6 +18,7 @@ use iCom\SolrClient\Query\Command\Add;
 use iCom\SolrClient\Query\Command\Commit;
 use iCom\SolrClient\Query\Command\Delete;
 use iCom\SolrClient\Query\Command\Optimize;
+use iCom\SolrClient\Query\Command\Rollback;
 
 /**
  * Creates a JSON formatted update query.
@@ -107,6 +108,11 @@ final class UpdateQuery implements JsonQuery
     public function deleteByQuery(SelectQuery $query): self
     {
         return $this->withCommand(Delete::fromQuery($query));
+    }
+
+    public function rollback(): self
+    {
+        return $this->withCommand(Rollback::create());
     }
 
     public function toJson(): string
