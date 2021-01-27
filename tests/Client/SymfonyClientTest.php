@@ -146,6 +146,24 @@ final class SymfonyClientTest extends TestCase
         self::assertEmpty($response['response']['docs']);
     }
 
+    /**
+     * @test
+     * @group integration
+     */
+    public function it_can_rollback_uncommitted_changes(): void
+    {
+        $client = SolrClient::create(['base_uri' => getenv('SOLR_URL')]);
+
+        $document = ['id' => 55, 'sample_bool' => false, 'sample_int' => 66];
+        $client->update(UpdateQuery::create()->add($document));
+        $client->update(UpdateQuery::create()->rollback());
+        $client->update(UpdateQuery::create()->commit());
+
+        $response = $client->select(SelectQuery::create()->query('id:55')->fields(['id']));
+
+        self::assertEmpty($response['response']['docs']);
+    }
+
     public function queryProvider(): iterable
     {
         yield 'it selects single document id' => [

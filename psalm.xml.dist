@@ -3,6 +3,7 @@
     totallyTyped="true"
     errorLevel="1"
     resolveFromConfigFile="true"
+    cacheDirectory="/tmp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config phar://vendor/vimeo/psalm/config.xsd"

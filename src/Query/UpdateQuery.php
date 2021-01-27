@@ -18,6 +18,7 @@ use iCom\SolrClient\Query\Command\Add;
 use iCom\SolrClient\Query\Command\Commit;
 use iCom\SolrClient\Query\Command\Delete;
 use iCom\SolrClient\Query\Command\Optimize;
+use iCom\SolrClient\Query\Command\Rollback;
 
 /**
  * Creates a JSON formatted update query.
@@ -97,6 +98,11 @@ final class UpdateQuery implements JsonQuery
         }
 
         return $this->withCommand($optimize);
+    }
+
+    public function rollback(): self
+    {
+        return $this->withCommand(Rollback::create());
     }
 
     public function deleteByIds(array $ids): self
