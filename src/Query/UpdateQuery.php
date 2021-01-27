@@ -100,6 +100,11 @@ final class UpdateQuery implements JsonQuery
         return $this->withCommand($optimize);
     }
 
+    public function rollback(): self
+    {
+        return $this->withCommand(Rollback::create());
+    }
+
     public function deleteByIds(array $ids): self
     {
         return $this->withCommand(Delete::fromIds($ids));
@@ -108,11 +113,6 @@ final class UpdateQuery implements JsonQuery
     public function deleteByQuery(SelectQuery $query): self
     {
         return $this->withCommand(Delete::fromQuery($query));
-    }
-
-    public function rollback(): self
-    {
-        return $this->withCommand(Rollback::create());
     }
 
     public function toJson(): string

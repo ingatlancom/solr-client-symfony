@@ -28,4 +28,12 @@ final class RollbackTest extends TestCase
 
         self::assertEquals('{}', $rollback->toJson());
     }
+
+    /** @test */
+    public function it_has_a_name(): void
+    {
+        $rollback = new Rollback();
+
+        self::assertEquals('rollback', $rollback->getName());
+    }
 }

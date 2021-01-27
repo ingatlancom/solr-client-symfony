@@ -59,7 +59,7 @@ final class UpdateQueryTest extends TestCase
     }
 
     /** @test */
-    public function it_converts_rollback_to_json_objects(): void
+    public function it_can_add_an_rollback_command(): void
     {
         self::assertSame('{"rollback":{}}', UpdateQuery::create()->rollback()->toJson());
     }
