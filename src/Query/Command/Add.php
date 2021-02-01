@@ -28,7 +28,7 @@ final class Add implements Command
     /**
      * @psalm-var array{commitWithin: ?int, doc: ?array, overwrite: ?bool}
      */
-    private $options = [
+    private array $options = [
         'doc' => null,
         'commitWithin' => null,
         'overwrite' => null,

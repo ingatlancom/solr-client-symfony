@@ -35,7 +35,7 @@ final class UpdateQuery implements JsonQuery
      * @var Command[]
      * @psaml-var list<Command>
      */
-    private $commands = [];
+    private array $commands = [];
 
     /**
      * @psalm-param list<Command> $commands
