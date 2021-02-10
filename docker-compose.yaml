@@ -24,7 +24,7 @@ services:
                 PHP_VERSION: '7.4-cli-alpine'
 
     solr:
-        image: solr:8.4-slim
+        image: solr:8.8-slim
         ports:
             - "8983:8983"
         volumes:

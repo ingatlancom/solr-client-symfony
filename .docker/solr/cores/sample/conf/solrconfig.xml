@@ -2,7 +2,7 @@
 <config>
     <schemaFactory class="ClassicIndexSchemaFactory" />
 
-    <luceneMatchVersion>8.4.0</luceneMatchVersion>
+    <luceneMatchVersion>8.8.0</luceneMatchVersion>
 
     <requestHandler name="/select" class="solr.SearchHandler">
         <lst name="defaults">
