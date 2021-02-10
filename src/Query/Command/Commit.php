@@ -28,7 +28,7 @@ final class Commit implements Command
     /**
      * @psalm-var array{waitSearcher: ?bool, expungeDeletes: ?bool}
      */
-    private $options = [
+    private array $options = [
         'waitSearcher' => null,
         'expungeDeletes' => null,
     ];

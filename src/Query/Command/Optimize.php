@@ -28,7 +28,7 @@ final class Optimize implements Command
     /**
      * @psalm-var array{maxSegments: ?int, waitSearcher: ?bool}
      */
-    private $options = [
+    private array $options = [
         'waitSearcher' => null,
         'maxSegments' => null,
     ];

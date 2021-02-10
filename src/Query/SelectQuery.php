@@ -26,7 +26,7 @@ final class SelectQuery implements JsonQuery
     /**
      * @var array<string, string>
      */
-    private $types = [
+    private array $types = [
         // to keep key order consistent
         'query' => 'string',
         'filter' => 'array',
@@ -50,7 +50,7 @@ final class SelectQuery implements JsonQuery
      *      params?: array,
      * }
      */
-    private $body;
+    private array $body;
 
     /**
      * @psalm-param array<string, string|array|int> $body

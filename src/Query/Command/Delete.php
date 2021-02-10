@@ -21,7 +21,6 @@ use iCom\SolrClient\Query\SelectQuery;
  * @see https://lucene.apache.org/solr/guide/8_3/uploading-data-with-index-handlers.html#delete-operations
  *
  * @psalm-immutable
- * @psalm-suppress MissingConstructor
  */
 final class Delete implements Command
 {
@@ -30,7 +29,11 @@ final class Delete implements Command
     /**
      * @var array|SelectQuery
      */
-    private $value;
+    private $value = [];
+
+    private function __construct()
+    {
+    }
 
     /**
      * @psalm-pure

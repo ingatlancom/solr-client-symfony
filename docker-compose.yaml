@@ -23,6 +23,13 @@ services:
             args:
                 PHP_VERSION: '7.4-cli-alpine'
 
+    php8:
+        <<: *php-common
+        build:
+            context: .docker/php/
+            args:
+                PHP_VERSION: '8.0-cli-alpine'
+
     solr:
         image: solr:8.8-slim
         ports:

@@ -8,18 +8,19 @@ jobs:
             fail-fast: false
             matrix:
                 php:
-                    - '7.2'
                     - '7.4'
+                    - '8.0'
+                    - '8.1'
                 include:
-                    - php: '7.2'
-                      deps: low
                     - php: '7.4'
+                      deps: low
+                    - php: '8.0'
                       coverage: pcov
         steps:
             - uses: actions/checkout@v2
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v1
+              uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   extensions: curl, mbstring
@@ -42,10 +43,10 @@ jobs:
               uses: actions/cache@v1
               with:
                   path: build
-                  key: ${{ runner.os }}-build-php${{ matrix.php }}
+                  key: ${{ runner.os }}-build-v1-php${{ matrix.php }}
                   restore-keys: |
-                      ${{ runner.os }}-build-php${{ matrix.php }}
-                      ${{ runner.os }}-build
+                      ${{ runner.os }}-build-v1-php${{ matrix.php }}
+                      ${{ runner.os }}-build-v1
 
             - name: Install Symfony Flex
               run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
@@ -71,7 +72,7 @@ jobs:
               env:
                   INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
               run: |
-                  [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.16.1/infection.phar -o build/bin/infection
+                  [ -e build/bin/infection ] || curl -Ls https://github.com/infection/infection/releases/download/0.21.0/infection.phar -o build/bin/infection
                   php -dpcov.enabled=1 build/bin/infection --skip-initial-tests --coverage=build/coverage --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --no-progress --show-mutations --ansi
 
             - name: Upload coverage results to Codecov
@@ -86,15 +87,13 @@ jobs:
     code-analysis:
         runs-on: ubuntu-18.04
         timeout-minutes: 5
-        strategy:
-            fail-fast: false
         steps:
             -   uses: actions/checkout@v2
 
             -   name: Setup PHP
-                uses: shivammathur/setup-php@v1
+                uses: shivammathur/setup-php@v2
                 with:
-                    php-version: '7.4'
+                    php-version: '8.0'
                     extensions: curl, mbstring
 
             -   name: Get Composer Cache Directory
@@ -138,7 +137,7 @@ jobs:
                 if: success() || failure()
 
             -   name: ECS
-                run: php vendor/bin/ecs check --ansi
+                run: php vendor/bin/ecs check --no-interaction --no-progress-bar --ansi
                 if: success() || failure()
 
             -   name: Security check
@@ -148,8 +147,6 @@ jobs:
     integration-tests:
         runs-on: ubuntu-18.04
         timeout-minutes: 5
-        strategy:
-            fail-fast: false
         steps:
             -   uses: actions/checkout@v2
 
@@ -159,9 +156,9 @@ jobs:
                     docker-compose up -d solr
 
             -   name: Setup PHP
-                uses: shivammathur/setup-php@v1
+                uses: shivammathur/setup-php@v2
                 with:
-                    php-version: '7.4'
+                    php-version: '8.0'
                     extensions: curl, mbstring
 
             -   name: Get Composer Cache Directory
