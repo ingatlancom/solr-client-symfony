@@ -32,7 +32,7 @@
         ],
         "test-upper": [
             "@composer update --ansi",
-            "phpdbg -qrr vendor/bin/phpunit --coverage-html=build/coverage/coverage-html --coverage-xml=build/coverage/coverage-xml --coverage-clover=build/coverage/clover.xml --log-junit=build/coverage/junit.xml --coverage-text",
+            "phpdbg -qrr vendor/bin/phpunit",
             "[ -e build/bin/infection ] || curl -L https://github.com/infection/infection/releases/download/0.21.0/infection.phar -o build/bin/infection",
             "PHP_BINARY=phpdbg phpdbg -qrr build/bin/infection --skip-initial-tests --coverage=build/coverage --min-msi=84 --min-covered-msi=86 --threads=$(nproc) --no-progress --show-mutations --ansi --log-verbosity=all || true"
         ],

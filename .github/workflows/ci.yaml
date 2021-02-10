@@ -39,18 +39,6 @@ jobs:
                       ${{ runner.os }}-composer-php${{ matrix.php }}
                       ${{ runner.os }}-composer
 
-            - name: Cache build
-              uses: actions/cache@v1
-              with:
-                  path: build
-                  key: ${{ runner.os }}-build-v1-php${{ matrix.php }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-v1-php${{ matrix.php }}
-                      ${{ runner.os }}-build-v1
-
-            - name: Install Symfony Flex
-              run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
-
             - name: Install dependencies
               run: |
                   if [[ '${{ matrix.deps }}' == 'low' ]]; then
@@ -65,7 +53,7 @@ jobs:
             - name: Run test suit with coverage
               if: matrix.coverage == 'pcov'
               run: |
-                  php -dpcov.enabled=1 vendor/bin/phpunit --coverage-html=build/coverage/coverage-html --coverage-xml=build/coverage/coverage-xml --coverage-clover=build/coverage/clover.xml --log-junit=build/coverage/junit.xml --coverage-text --colors=always
+                  php -dpcov.enabled=1 vendor/bin/phpunit --colors=always
 
             - name: Run mutation tests
               if: matrix.coverage == 'pcov'
@@ -108,15 +96,6 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-composer-php${{ matrix.php }}
                         ${{ runner.os }}-composer
-
-            -   name: Cache build
-                uses: actions/cache@v1
-                with:
-                    path: build
-                    key: ${{ runner.os }}-build-${{ hashFiles('.github/workflows/ci.yaml') }}
-
-            -   name: Install Symfony Flex
-                run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
 
             -   name: Validate composer.json and composer.lock
                 run: composer validate
@@ -173,9 +152,6 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-composer-php${{ matrix.php }}
                         ${{ runner.os }}-composer
-
-            -   name: Install Symfony Flex
-                run: composer global require --prefer-dist --no-progress --no-suggest --ansi symfony/flex
 
             -   name: Install Dependencies
                 run: composer update --prefer-dist --no-progress --no-suggest --ansi

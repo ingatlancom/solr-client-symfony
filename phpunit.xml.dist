@@ -32,9 +32,21 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory>src</directory>
-        </whitelist>
-    </filter>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+
+        <report>
+            <html outputDirectory="build/coverage/coverage-html" />
+            <xml outputDirectory="build/coverage/coverage-xml"/>
+            <clover outputFile="build/coverage/clover.xml"/>
+            <crap4j outputFile="build/coverage/crap4j.xml" />
+            <text outputFile="php://stdout" />
+        </report>
+    </coverage>
+
+    <logging>
+        <junit outputFile="build/coverage/junit.xml"/>
+    </logging>
 </phpunit>
