@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
  * @uses \iCom\SolrClient\Query\Command\Add
  * @uses \iCom\SolrClient\Query\Command\Commit
  * @uses \iCom\SolrClient\Query\Command\Optimize
+ * @uses \iCom\SolrClient\Query\Command\Rollback
  * @uses \iCom\SolrClient\Query\Command\Delete
  */
 final class UpdateQueryTest extends TestCase
